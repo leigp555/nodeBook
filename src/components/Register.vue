@@ -48,9 +48,9 @@ const formState = reactive<FormState>({
 const onFinish = (values: any) => {
   console.log('Success:', values);
 };
-const onFinishFailed = (errorInfo: any) => {
-  console.log('Failed:', errorInfo);
-};
+// const onFinishFailed = (errorInfo: any) => {
+//   console.log('Failed:', errorInfo);
+// };
 const verifyUserName=[
   { required: true, message: '填写用户名' },
   {pattern:/^[a-zA-Z0-9_-]{3,16}$/,message: '用户名必须4到16位(字母，数字，下划线，减号)',trigger:"blur"}
