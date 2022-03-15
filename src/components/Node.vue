@@ -1,14 +1,8 @@
 <template>
   <div class="nodeWrap">
     <div class="menuWrap">
-      <a-menu
-          class="menu"
-          v-model:selectedKeys="state.selectedKeys"
-          style="width: 256px"
-          mode="inline"
-          :open-keys="state.openKeys"
-          @openChange="onOpenChange"
-      >
+      <a-menu class="menu" v-model:selectedKeys="state.selectedKeys"
+              style="width: 256px" mode="inline" :open-keys="state.openKeys" @openChange="onOpenChange">
         <a-avatar :size="64" src="../src/assets/avatar.png" class="avatar">
           <template #icon><UserOutlined /></template>
         </a-avatar>
@@ -51,12 +45,15 @@
         </a-sub-menu>
       </a-menu>
     </div>
-    <div class="main">主要内容</div>
+    <div class="main">
+      <router-view/>
+    </div>
   </div>
 
 </template>
 <script lang="ts" setup>
 import {reactive, } from 'vue';
+import NodeComponent from '@/components/NodeContent.vue'
 import {QqOutlined, HeartOutlined, DeleteOutlined, UserOutlined ,ReadOutlined} from '@ant-design/icons-vue';
 import type {MenuProps} from 'ant-design-vue';
 

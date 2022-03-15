@@ -20,7 +20,7 @@ declare module 'vue' {
     ARadioGroup: typeof import('ant-design-vue/es')['RadioGroup']
     ASubMenu: typeof import('ant-design-vue/es')['SubMenu']
     Node: typeof import('./src/components/Node.vue')['default']
-    NodeContent: typeof import('./src/components/nodeContent.vue')['default']
+    NodeContent: typeof import('./src/components/NodeContent.vue')['default']
     Register: typeof import('./src/components/Register.vue')['default']
     SignIn: typeof import('./src/components/SignIn.vue')['default']
   }
