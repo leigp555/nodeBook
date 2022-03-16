@@ -47,7 +47,7 @@
 
 <script lang="ts" setup>
 import {UserOutlined, LockOutlined} from '@ant-design/icons-vue';
-import {computed, reactive, toRefs} from "vue";
+import { reactive, toRefs} from "vue";
 import {FormState} from "@/type";
 import {useRouter} from "vue-router";
 import {RuleObject} from "ant-design-vue/es/form";
