@@ -1,5 +1,5 @@
 <template>
-<List/>
+<List kind="collection"/>
 </template>
 
 <script lang="ts">

@@ -1,5 +1,5 @@
 <template>
-<List/>
+<List kind="garbage"/>
 </template>
 
 <script lang="ts">

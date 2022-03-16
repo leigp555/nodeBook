@@ -1,29 +1,24 @@
 <template>
   <div class="wrap">
-    <a-list class="demo-loadmore-list" :loading="initLoading" item-layout="horizontal" :data-source="list">
-
+    <a-list class="listWrap" :loading="initLoading" item-layout="horizontal" :data-source="list">
       <template #renderItem="{ item }">
         <a-list-item>
+          <a-skeleton :title="false" :loading="!!item.loading" active>
+            <a-list-item-meta description="Ant Design, a design language for background applications">
+              <template #title><a href="https://www.antdv.com/">{{ item.name.last }}</a></template>
+            </a-list-item-meta>
+          </a-skeleton>
+
           <template #actions>
             <a key="list-loadmore-edit">编辑</a>
             <a key="list-loadmore-more">收藏</a>
             <a key="list-loadmore-more">删除</a>
           </template>
-          <a-skeleton avatar :title="false" :loading="!!item.loading" active>
-            <a-list-item-meta
-                description="Ant Design, a design language for background applications"
-            >
-              <template #title>
-                <a href="https://www.antdv.com/">{{ item.name.last }}</a>
-              </template>
-            </a-list-item-meta>
-          </a-skeleton>
         </a-list-item>
       </template>
-
       <template #loadMore>
-        <div v-if="!initLoading && !loading"
-             :style="{ textAlign: 'center', marginTop: '12px', height: '32px', lineHeight: '32px' }">
+        <div v-if="!initLoading && !loading" class="loadMore"
+             :style="{ textAlign: 'center', marginTop: '16px', height: '32px', lineHeight: '32px' }">
           <a-button @click="onLoadMore">loading more</a-button>
         </div>
       </template>
@@ -33,11 +28,10 @@
 </template>
 <script lang="ts" setup>
 
-import { onMounted, ref, nextTick} from 'vue';
+import {onMounted, ref} from 'vue';
 
 const count = 3;
 const fakeDataUrl = `https://randomuser.me/api/?results=${count}&inc=name,gender,email,nat,picture&noinfo`;
-
 const initLoading = ref(true);
 const loading = ref(false);
 const data = ref([]);
@@ -54,9 +48,7 @@ onMounted(() => {
 
 const onLoadMore = () => {
   loading.value = true;
-  list.value = data.value.concat(
-      [...new Array(count)].map(() => ({loading: true, name: {}, picture: {}})),
-  );
+  list.value = data.value.concat([...new Array(count)].map(() => ({loading: true, name: {}, picture: {}})));
   fetch(fakeDataUrl)
       .then(res => res.json())
       .then(res => {
@@ -64,19 +56,16 @@ const onLoadMore = () => {
         loading.value = false;
         data.value = newData;
         list.value = newData;
-        nextTick(() => {
-          window.dispatchEvent(new Event('resize'));
-        });
       });
 }
 
 </script>
-<style scoped>
-.demo-loadmore-list {
-  min-height: 350px;
-}
-
+<style scoped lang="scss">
 .wrap {
   padding: 20px;
+
+  > .listWrap {
+    min-height: 350px;
+  }
 }
 </style>

@@ -1,5 +1,5 @@
 <template>
- <List/>
+ <List kind="nodeBooks"/>
 </template>
 
 <script lang="ts" setup>
