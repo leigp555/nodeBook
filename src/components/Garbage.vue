@@ -1,12 +1,14 @@
 <template>
-
+<List/>
 </template>
 
 <script lang="ts">
 import {defineComponent} from "vue";
+import List from "@/helper/List.vue";
 
 export default defineComponent({
-  name: "Garbage"
+  name: "Garbage",
+  components: {List}
 })
 </script>
 
