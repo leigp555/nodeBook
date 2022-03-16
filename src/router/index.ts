@@ -7,7 +7,7 @@ const history=createWebHashHistory()
 export const router=createRouter({
     history:history,
     routes:[
-        {path:'/',component:SignIn},
+        {path:'/',component:Node},
         {path:'/signIn',component:SignIn},
         {path:'/register',component:Register},
         {path:'/node',component:Node},
