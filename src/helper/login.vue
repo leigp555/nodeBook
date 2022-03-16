@@ -1,5 +1,8 @@
 <template>
   <div class="wrap">
+    <div class="alert" :class="{showAlert:alterTip}" >
+      <a-alert type="error" message="用户名或密码不正确" banner/>
+    </div>
     <div class="inner">
       <div class="avatarWrap">
         <a-avatar :size="64" :src="login==='signIn'?'../src/assets/avatar.png':''" class="avatar">
@@ -56,10 +59,11 @@
 
 <script lang="ts" setup>
 import {UserOutlined, LockOutlined} from '@ant-design/icons-vue';
-import {reactive, toRefs} from "vue";
-import {FormState} from "@/type";
+import {reactive, ref, toRefs} from "vue";
+import {FormState, loginObj} from "@/type";
 import {useRouter} from "vue-router";
 import {RuleObject} from "ant-design-vue/es/form";
+import {request} from "@/helper/netRequest"
 
 const props = defineProps({
   login: String
@@ -71,11 +75,6 @@ const formState = reactive<FormState>({
   password: '',
   checkPass: '',
 });
-const onFinish = (values: any) => {
-  console.log(values);
-  router.push("/node")
-};
-
 const verifyUserName = [
   {required: true, message: '请填写用户名'},
   {pattern: /^[a-zA-Z0-9_-]{3,16}$/, message: '用户名必须3到16位(字母，数字，下划线，减号)', trigger: "blur"}
@@ -98,8 +97,30 @@ const verifyAgain = [
 ]
 
 //网络请求
-import {request} from "@/helper/netRequest"
-request("/signIn","GET",{"name":"lgp"}).then((xx)=>{console.log(xx)})
+const alterTip = ref<boolean>(false)
+const onFinish = (values: loginObj) => {
+  if(login.value==="signIn"){
+    request("/signIn", "POST", values).then(() => {
+      router.push("/node")
+    }, () => {
+      alterTip.value = true
+      setTimeout(() => {
+        alterTip.value = false
+      },2000)
+    })
+  }else if(login.value==="register"){
+    delete values.checkPass
+    request("/register", "POST", values).then(() => {
+      router.push("/node")
+    }, () => {
+      alterTip.value = true
+      setTimeout(() => {
+        alterTip.value = false
+      },2000)
+    })
+  }
+
+}
 </script>
 
 
@@ -107,6 +128,19 @@ request("/signIn","GET",{"name":"lgp"}).then((xx)=>{console.log(xx)})
 .wrap {
   height: 100%;
   position: relative;
+
+  .alert {
+    position: absolute;
+    top: -50px;
+    left: 50%;
+    transition: all 250ms;
+    transform: translateX(-50%);
+    &.showAlert {
+      top: -50px;
+      left: 50%;
+      transform: translateX(-50%) translateY(70px);
+    }
+  }
 
   .inner {
     padding: 80px 20px 20px 20px;
