@@ -8,7 +8,6 @@
               <template #title><a href="https://www.antdv.com/">{{ item.name.last }}</a></template>
             </a-list-item-meta>
           </a-skeleton>
-
           <template #actions>
             <a key="list-loadmore-edit">编辑</a>
             <a key="list-loadmore-more">收藏</a>
@@ -22,7 +21,6 @@
           <a-button @click="onLoadMore">loading more</a-button>
         </div>
       </template>
-
     </a-list>
   </div>
 </template>
@@ -31,10 +29,7 @@ import {computed, onMounted, ref} from 'vue';
 import {request} from "@/helper/netRequest";
 import {useStore} from "vuex";
 
-const store=useStore()
-const currentUser=computed(()=>{
-  return store.getters.getCurrentUser
-})
+
 const count = 3;
 const fakeDataUrl = `https://randomuser.me/api/?results=${count}&inc=name,gender,email,nat,picture&noinfo`;
 const initLoading = ref(true);
@@ -49,14 +44,26 @@ onMounted(() => {
         data.value = res.results;
         list.value = res.results;
       });
-  console.log(currentUser.value)
-  // request("/node","GET",{userId:1}).then(()=>{
-  //
-  // })
+  request("/nodeBooks", "GET").then((res) => {       //获取登录状态
+    console.log(res)
+  })
+  request("/getAvatar", "GET").then((res) => {       //获取头像
+
+  })
+  request("/getNodes", "GET").then((res) => {        //获取所有笔记
+    console.log(res)
+  })
+  request("/getCollection", "GET").then((res) => {     //获取所有收藏
+    console.log(res)
+  })
+  request("/getGarbage", "GET").then((res) => {        //获取所有回收站
+    console.log(res)
+  })
 });
 
 const onLoadMore = () => {
   loading.value = true;
+  //@ts-ignore
   list.value = data.value.concat([...new Array(count)].map(() => ({loading: true, name: {}, picture: {}})));
   fetch(fakeDataUrl)
       .then(res => res.json())

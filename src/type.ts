@@ -1,10 +1,10 @@
 export interface FormState {
     username: string;
     password: string;
-    checkPass: string;
+    checkPass?: string;
 }
 
 export interface loginObj{
     username:string|number,
-    password:number|string
+    password:number|string,
 }

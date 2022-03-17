@@ -5,7 +5,7 @@
         <use xlink:href="#icon-back"></use>
       </svg>
       <div class="avatarWrap">
-        <a-avatar :size="40" src="../src/assets/avatar.png" class="avatar">
+        <a-avatar :size="40" src="http://localhost:8888/getAvatar" class="avatar">
           <template #icon>
             <UserOutlined/>
           </template>
@@ -40,14 +40,13 @@
   </div>
 </template>
 <script lang="ts" setup>
-import {BookOutlined, HeartOutlined, DeleteOutlined, UserOutlined} from '@ant-design/icons-vue';
-import {AppleOutlined, AndroidOutlined} from '@ant-design/icons-vue';
-import {ref} from "vue";
+import { ref} from "vue";
 import NodeBooks from "@/components/NodeBooks.vue";
+import { UserOutlined, BookOutlined ,HeartOutlined,DeleteOutlined} from '@ant-design/icons-vue';
 import Collection from "@/components/Collection.vue";
 import Garbage from "@/components/Garbage.vue";
 
-const activeKey = ref<number>("1")
+const activeKey = ref<string>("1")
 </script>
 
 <style lang="scss" scoped>
