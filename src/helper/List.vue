@@ -27,9 +27,14 @@
   </div>
 </template>
 <script lang="ts" setup>
+import {computed, onMounted, ref} from 'vue';
+import {request} from "@/helper/netRequest";
+import {useStore} from "vuex";
 
-import {onMounted, ref} from 'vue';
-
+const store=useStore()
+const currentUser=computed(()=>{
+  return store.getters.getCurrentUser
+})
 const count = 3;
 const fakeDataUrl = `https://randomuser.me/api/?results=${count}&inc=name,gender,email,nat,picture&noinfo`;
 const initLoading = ref(true);
@@ -44,6 +49,10 @@ onMounted(() => {
         data.value = res.results;
         list.value = res.results;
       });
+  console.log(currentUser.value)
+  // request("/node","GET",{userId:1}).then(()=>{
+  //
+  // })
 });
 
 const onLoadMore = () => {
@@ -60,6 +69,8 @@ const onLoadMore = () => {
 }
 
 </script>
+
+
 <style scoped lang="scss">
 .wrap {
   padding: 20px;

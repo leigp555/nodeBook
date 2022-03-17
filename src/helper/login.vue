@@ -1,7 +1,10 @@
 <template>
   <div class="wrap">
-    <div class="alert" :class="{showAlert:alterTip}" >
+    <div class="alert" :class="{showAlert:alterTip}" v-if="login==='signIn'">
       <a-alert type="error" message="用户名或密码不正确" banner/>
+    </div>
+    <div class="alert" :class="{showAlert:alterTip}"  v-else-if="login==='register'">
+      <a-alert type="error" message="用户已存在" banner/>
     </div>
     <div class="inner">
       <div class="avatarWrap">
@@ -64,7 +67,9 @@ import {FormState, loginObj} from "@/type";
 import {useRouter} from "vue-router";
 import {RuleObject} from "ant-design-vue/es/form";
 import {request} from "@/helper/netRequest"
+import {useStore} from "vuex";
 
+const store = useStore()
 const props = defineProps({
   login: String
 })
@@ -102,6 +107,7 @@ const onFinish = (values: loginObj) => {
   if(login.value==="signIn"){
     request("/signIn", "POST", values).then(() => {
       router.push("/node")
+      store.commit("modifyCurrentUser",values)
     }, () => {
       alterTip.value = true
       setTimeout(() => {
@@ -112,6 +118,7 @@ const onFinish = (values: loginObj) => {
     delete values.checkPass
     request("/register", "POST", values).then(() => {
       router.push("/node")
+      store.commit("modifyCurrentUser",values)
     }, () => {
       alterTip.value = true
       setTimeout(() => {
