@@ -69,6 +69,9 @@ import {RuleObject} from "ant-design-vue/es/form";
 import {request} from "@/helper/netRequest"
 import {useStore} from "vuex";
 
+type loginX={
+  login:"signIn"|"register"
+}
 const store = useStore()
 const props = defineProps({
   login: String
@@ -103,8 +106,8 @@ const verifyAgain = [
 
 //网络请求
 const alterTip = ref<boolean>(false)
-const onFinish = (values: loginObj) => {
-  if(login.value==="signIn"){
+const onFinish = (values:FormState) => {
+  if(login!.value==="signIn"){
     request("/signIn", "POST", values).then(() => {
       router.push("/node")
       store.commit("modifyCurrentUser",values)
@@ -114,10 +117,10 @@ const onFinish = (values: loginObj) => {
         alterTip.value = false
       },2000)
     })
-  }else if(login.value==="register"){
+  }else if(login!.value==="register"){
     delete values.checkPass
     request("/register", "POST", values).then(() => {
-      router.push("/node")
+      router.push("/signIn")
       store.commit("modifyCurrentUser",values)
     }, () => {
       alterTip.value = true
