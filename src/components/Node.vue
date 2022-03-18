@@ -24,7 +24,7 @@
         <a-tab-pane key="4">
           <template #tab><span><search-outlined />搜索</span></template>
           <div class="show">
-            <Garbage/>
+            <Search/>
           </div>
         </a-tab-pane>
       </a-tabs>
@@ -45,6 +45,7 @@ import Garbage from "@/components/Garbage.vue";
 import {request} from "@/helper/netRequest";
 const activeKey = ref<string>("1")
 import Header from "@/components/Header.vue"
+import Search from "@/components/Search.vue";
 
 
 </script>
@@ -54,17 +55,14 @@ import Header from "@/components/Header.vue"
   position: relative;
   top: 0;
   left: 0;
-
-
-
   > .newNode {
-    position: sticky;
-    bottom: 150px;
+    position: fixed;
+    bottom: 120px;
     right: 0;
     display: flex;
     justify-content: end;
     align-items: center;
-    padding: 50px;
+    padding: 60px;
 
     > .icon {
       width: 3em;

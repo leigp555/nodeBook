@@ -14,6 +14,7 @@ declare module 'vue' {
     AInput: typeof import('ant-design-vue/es')['Input']
     AInputNumber: typeof import('ant-design-vue/es')['InputNumber']
     AInputPassword: typeof import('ant-design-vue/es')['InputPassword']
+    AInputSearch: typeof import('ant-design-vue/es')['InputSearch']
     AList: typeof import('ant-design-vue/es')['List']
     AListItem: typeof import('ant-design-vue/es')['ListItem']
     AListItemMeta: typeof import('ant-design-vue/es')['ListItemMeta']
@@ -23,6 +24,7 @@ declare module 'vue' {
     ARadio: typeof import('ant-design-vue/es')['Radio']
     ARadioGroup: typeof import('ant-design-vue/es')['RadioGroup']
     ASkeleton: typeof import('ant-design-vue/es')['Skeleton']
+    ASpace: typeof import('ant-design-vue/es')['Space']
     ASubMenu: typeof import('ant-design-vue/es')['SubMenu']
     ATabPane: typeof import('ant-design-vue/es')['TabPane']
     ATabs: typeof import('ant-design-vue/es')['Tabs']
@@ -33,6 +35,9 @@ declare module 'vue' {
     NodeBooks: typeof import('./src/components/NodeBooks.vue')['default']
     NodeContent: typeof import('./src/components/NodeContent.vue')['default']
     Register: typeof import('./src/components/Register.vue')['default']
+    Seach: typeof import('./src/components/seach.vue')['default']
+    Search: typeof import('./src/components/Search.vue')['default']
+    Seatch: typeof import('./src/components/Seatch.vue')['default']
     SignIn: typeof import('./src/components/SignIn.vue')['default']
   }
 }
