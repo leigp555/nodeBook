@@ -108,7 +108,7 @@ const alterTip = ref<boolean>(false)
 const onFinish = (values: FormState) => {
   if (login!.value === "signIn") {
     request("/signIn", "POST", values).then(() => {
-      router.push("/node")
+      router.push("/")
       store.commit("modifyCurrentUser", values)
     }, () => {
       alterTip.value = true
@@ -181,6 +181,7 @@ avatarSrc.value=string
           font-size: 16px;
           background-color: #ff6a00;
           margin-bottom: 10px;
+          border: none;
         }
 
         .link {

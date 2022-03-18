@@ -73,13 +73,13 @@ request("/getAvatar", "GET").then((res) => {       //获取头像
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: green;
+    background-color: #FF9966;
     padding: 5px 10px;
     margin-bottom: 10px;
 
     .avatarWrap {
       display: flex;
-      justify-content: end;
+      justify-content: start;
     }
   }
 
