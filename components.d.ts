@@ -28,6 +28,7 @@ declare module 'vue' {
     ATabs: typeof import('ant-design-vue/es')['Tabs']
     Collection: typeof import('./src/components/Collection.vue')['default']
     Garbage: typeof import('./src/components/Garbage.vue')['default']
+    Header: typeof import('./src/components/Header.vue')['default']
     Node: typeof import('./src/components/Node.vue')['default']
     NodeBooks: typeof import('./src/components/NodeBooks.vue')['default']
     NodeContent: typeof import('./src/components/NodeContent.vue')['default']

@@ -1,17 +1,6 @@
 <template>
   <div class="wrap">
-    <div class="header">
-      <svg class="icon" aria-hidden="true">
-        <use xlink:href="#icon-back"></use>
-      </svg>
-      <div class="avatarWrap">
-        <a-avatar :size="40" :src="avatarSrc" class="avatar">
-          <template #icon>
-            <UserOutlined/>
-          </template>
-        </a-avatar>
-      </div>
-    </div>
+    <Header/>
     <div class="main">
       <a-tabs v-model:activeKey="activeKey" centered>
         <a-tab-pane key="1">
@@ -32,6 +21,12 @@
             <Garbage/>
           </div>
         </a-tab-pane>
+        <a-tab-pane key="4">
+          <template #tab><span><search-outlined />搜索</span></template>
+          <div class="show">
+            <Garbage/>
+          </div>
+        </a-tab-pane>
       </a-tabs>
     </div>
     <div class="newNode">
@@ -42,23 +37,14 @@
   </div>
 </template>
 <script lang="ts" setup>
-import {onMounted, ref} from "vue";
+import {ref} from "vue";
 import NodeBooks from "@/components/NodeBooks.vue";
-import {UserOutlined, BookOutlined, HeartOutlined, DeleteOutlined} from '@ant-design/icons-vue';
+import { BookOutlined, HeartOutlined, DeleteOutlined,SearchOutlined} from '@ant-design/icons-vue';
 import Collection from "@/components/Collection.vue";
 import Garbage from "@/components/Garbage.vue";
 import {request} from "@/helper/netRequest";
-
 const activeKey = ref<string>("1")
-
-
-
-import {encode, decode} from 'js-base64';
-const avatarSrc = ref<string>("")
-request("/getAvatar", "GET").then((res) => {       //获取头像
-  avatarSrc.value = "data:image/png;base64," + res
-  window.localStorage.setItem("node-avatar",avatarSrc.value)
-})
+import Header from "@/components/Header.vue"
 
 
 </script>
@@ -69,19 +55,7 @@ request("/getAvatar", "GET").then((res) => {       //获取头像
   top: 0;
   left: 0;
 
-  > .header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: #FF9966;
-    padding: 5px 10px;
-    margin-bottom: 10px;
 
-    .avatarWrap {
-      display: flex;
-      justify-content: start;
-    }
-  }
 
   > .newNode {
     position: sticky;
