@@ -2,11 +2,13 @@
   <div class="headerWrap">
     <div class="slideTop" >
       <div class="avatarWrap">
-        <a-avatar :size="42" :src="avatarSrc" class="avatar">
-          <template #icon>
-            <UserOutlined/>
-          </template>
-        </a-avatar>
+        <router-link to="/userInfo">
+          <a-avatar :size="42" :src="avatarSrc" class="avatar">
+            <template #icon>
+              <UserOutlined/>
+            </template>
+          </a-avatar>
+        </router-link>
         <span>{{dataState.userName}}</span>
       </div>
       <a-button type="primary" v-if="dataState.isPunch" class="button" @click="punch">已打卡</a-button>
@@ -80,7 +82,7 @@ request("/getAvatar", "GET").then((res) => {       //获取头像
       }
     }
     .avatarWrap {
-      >.avatar{
+      >a>.avatar{
         box-shadow: 0 0 1px 2px rgba(255,255,255,.5);
       }
       display: flex;

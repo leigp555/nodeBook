@@ -15,10 +15,7 @@
         <List kind="garbage"/>
       </div>
       <div class="null" v-if="!haveContent">
-        <svg class="icon" aria-hidden="true">
-          <use xlink:href="#icon-null"></use>
-        </svg>
-        <p>什么也没有!!!</p>
+        <a-empty :description="null"/>
       </div>
     </div>
   </div>
@@ -27,39 +24,27 @@
 import {ref} from 'vue';
 import List from "@/helper/List.vue"
 const value = ref<string>('');
-const haveContent=ref(true)
+const haveContent = ref(false)
 const onSearch = (searchValue: string) => {
   console.log(searchValue);
 };
-
 </script>
-
 <style lang="scss" scoped>
-.searchWrap{
-  .search{
+.searchWrap {
+  .search {
     display: flex;
     justify-content: center;
     align-items: center;
-    >.inner{
+
+    > .inner {
       width: 80%;
     }
   }
-  .searchResult{
-    >.null {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
+  .searchResult {
+    > .null {
       margin-top: 60px;
-      gap: 5px;
-      color: #666666;
     }
   }
 }
-.icon {
-  width: 4em; height:4em;
-  vertical-align: -0.15em;
-  fill: currentColor;
-  overflow: hidden;
-}
+
 </style>
