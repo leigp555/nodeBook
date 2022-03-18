@@ -3,12 +3,12 @@
     <div class="alert" :class="{showAlert:alterTip}" v-if="login==='signIn'">
       <a-alert type="error" message="用户名或密码不正确" banner/>
     </div>
-    <div class="alert" :class="{showAlert:alterTip}"  v-else-if="login==='register'">
+    <div class="alert" :class="{showAlert:alterTip}" v-else-if="login==='register'">
       <a-alert type="error" message="用户已存在" banner/>
     </div>
     <div class="inner">
       <div class="avatarWrap">
-        <a-avatar :size="64" :src="login==='signIn'?'../src/assets/avatar.png':''" class="avatar">
+        <a-avatar :size="64" :src="login==='signIn'? avatarSrc :''" class="avatar">
           <template #icon>
             <UserOutlined/>
           </template>
@@ -56,21 +56,20 @@
       </a-form>
     </div>
   </div>
-
 </template>
 
 
 <script lang="ts" setup>
 import {UserOutlined, LockOutlined} from '@ant-design/icons-vue';
-import {reactive, ref, toRefs} from "vue";
+import {onMounted, reactive, ref, toRefs} from "vue";
 import {FormState, loginObj} from "@/type";
 import {useRouter} from "vue-router";
 import {RuleObject} from "ant-design-vue/es/form";
 import {request} from "@/helper/netRequest"
 import {useStore} from "vuex";
 
-type loginX={
-  login:"signIn"|"register"
+type loginX = {
+  login: "signIn" | "register"
 }
 const store = useStore()
 const props = defineProps({
@@ -106,31 +105,34 @@ const verifyAgain = [
 
 //网络请求
 const alterTip = ref<boolean>(false)
-const onFinish = (values:FormState) => {
-  if(login!.value==="signIn"){
+const onFinish = (values: FormState) => {
+  if (login!.value === "signIn") {
     request("/signIn", "POST", values).then(() => {
       router.push("/node")
-      store.commit("modifyCurrentUser",values)
+      store.commit("modifyCurrentUser", values)
     }, () => {
       alterTip.value = true
       setTimeout(() => {
         alterTip.value = false
-      },2000)
+      }, 2000)
     })
-  }else if(login!.value==="register"){
+  } else if (login!.value === "register") {
     delete values.checkPass
     request("/register", "POST", values).then(() => {
       router.push("/signIn")
-      store.commit("modifyCurrentUser",values)
+      store.commit("modifyCurrentUser", values)
     }, () => {
       alterTip.value = true
       setTimeout(() => {
         alterTip.value = false
-      },2000)
+      }, 2000)
     })
   }
 
 }
+const avatarSrc = ref<string | null>()
+const string=window.localStorage.getItem("node-avatar")||""
+avatarSrc.value=string
 </script>
 
 
@@ -145,6 +147,7 @@ const onFinish = (values:FormState) => {
     left: 50%;
     transition: all 250ms;
     transform: translateX(-50%);
+
     &.showAlert {
       top: -50px;
       left: 50%;

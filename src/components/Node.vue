@@ -5,7 +5,7 @@
         <use xlink:href="#icon-back"></use>
       </svg>
       <div class="avatarWrap">
-        <a-avatar :size="40" src="http://localhost:8888/getAvatar" class="avatar">
+        <a-avatar :size="40" :src="avatarSrc" class="avatar">
           <template #icon>
             <UserOutlined/>
           </template>
@@ -17,18 +17,20 @@
         <a-tab-pane key="1">
           <template #tab><span><book-outlined/>笔记</span></template>
           <div class="show">
-            <NodeBooks />
+            <NodeBooks/>
           </div>
         </a-tab-pane>
-        <a-tab-pane key="2"><template #tab><span><heart-outlined/>收藏</span></template>
+        <a-tab-pane key="2">
+          <template #tab><span><heart-outlined/>收藏</span></template>
           <div class="show">
             <Collection/>
           </div>
         </a-tab-pane>
-        <a-tab-pane key="3"><template #tab><span><delete-outlined/>回收站</span></template>
-         <div class="show">
-           <Garbage/>
-         </div>
+        <a-tab-pane key="3">
+          <template #tab><span><delete-outlined/>回收站</span></template>
+          <div class="show">
+            <Garbage/>
+          </div>
         </a-tab-pane>
       </a-tabs>
     </div>
@@ -40,13 +42,25 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { ref} from "vue";
+import {onMounted, ref} from "vue";
 import NodeBooks from "@/components/NodeBooks.vue";
-import { UserOutlined, BookOutlined ,HeartOutlined,DeleteOutlined} from '@ant-design/icons-vue';
+import {UserOutlined, BookOutlined, HeartOutlined, DeleteOutlined} from '@ant-design/icons-vue';
 import Collection from "@/components/Collection.vue";
 import Garbage from "@/components/Garbage.vue";
+import {request} from "@/helper/netRequest";
 
 const activeKey = ref<string>("1")
+
+
+
+import {encode, decode} from 'js-base64';
+const avatarSrc = ref<string>("")
+request("/getAvatar", "GET").then((res) => {       //获取头像
+  avatarSrc.value = "data:image/png;base64," + res
+  window.localStorage.setItem("node-avatar",avatarSrc.value)
+})
+
+
 </script>
 
 <style lang="scss" scoped>
@@ -54,19 +68,22 @@ const activeKey = ref<string>("1")
   position: relative;
   top: 0;
   left: 0;
-  >.header {
+
+  > .header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     background-color: green;
     padding: 5px 10px;
     margin-bottom: 10px;
+
     .avatarWrap {
       display: flex;
       justify-content: end;
     }
   }
-  >.newNode{
+
+  > .newNode {
     position: sticky;
     bottom: 150px;
     right: 0;
@@ -74,7 +91,8 @@ const activeKey = ref<string>("1")
     justify-content: end;
     align-items: center;
     padding: 50px;
-    >.icon {
+
+    > .icon {
       width: 3em;
       height: 3em;
       vertical-align: -0.15em;
