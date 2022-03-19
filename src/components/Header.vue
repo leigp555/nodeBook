@@ -35,6 +35,7 @@
 import {reactive, ref, watchEffect} from "vue";
 import {request} from "@/helper/netRequest";
 import {UserOutlined} from '@ant-design/icons-vue';
+import {updateAvatar} from "@/helper/updateAvatar";
 const dataState=reactive({
   isPunch:false,
   userName:"用户名",
@@ -52,11 +53,9 @@ watchEffect(()=>{
 
 })
 const avatarSrc = ref<string>("")
-request("/getAvatar", "GET").then((res) => {       //获取头像
-  avatarSrc.value = "data:image/png;base64," + res
-  window.localStorage.setItem("node-avatar",avatarSrc.value)
+updateAvatar().then((res)=>{
+  avatarSrc.value=res
 })
-
 
 </script>
 

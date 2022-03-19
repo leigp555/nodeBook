@@ -46,8 +46,6 @@ import {request} from "@/helper/netRequest";
 const activeKey = ref<string>("1")
 import Header from "@/components/Header.vue"
 import Search from "@/components/Search.vue";
-
-
 </script>
 
 <style lang="scss" scoped>
