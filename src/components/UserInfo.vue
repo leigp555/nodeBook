@@ -10,7 +10,7 @@
         </router-link>
       </div>
       <div class="saveWrap">
-        <a-button type="text" class="save">
+        <a-button type="text" class="save" @click="saveInfo">
           <svg class="icon" aria-hidden="true">
             <use xlink:href="#icon-baocun"></use>
           </svg>
@@ -30,31 +30,53 @@
           </template>
         </a-avatar>
       </div>
-      <div class="username same">
+      <div class="nickname same" @click="showNickname">
         <span>昵称</span>
-        <span>username</span>
+        <span>{{ data.nickname}}</span>
       </div>
-      <div class="gender same">
+      <div class="gender same" @click="showDrawer">
         <span>性别</span>
-        <span>男</span>
+        <span>{{data.gender}}</span>
       </div>
-      <div class="phoneNumber same">
+      <div class="phoneNumber same" @click="showPhone">
         <span>手机号</span>
-        <span>17397015285</span>
+        <span>{{data.phoneNumber}}</span>
       </div>
       <div class="exit">
         <a-button type="primary" class="button" @click="signOut">退出登录</a-button>
       </div>
     </div>
   </div>
+  <div class="alert">
+    <div class="inputPhone">
+      <a-modal v-model:visible="phoneVisible" cancelText="取消" okText="确认" title="请输入手机号" @ok="phoneOk">
+        <a-input v-model:value="value2" placeholder="请输入手机号" allow-clear />
+      </a-modal>
+    </div>
+    <div class="inputName">
+      <a-modal v-model:visible="nicknameVisible" cancelText="取消" okText="确认" title="请输入昵称" @ok="nicknameOk">
+        <a-input v-model:value="value1" placeholder="请输入昵称" allow-clear />
+      </a-modal>
+    </div>
+    <a-drawer  :placement="placement" :closable="false" :visible="visibleX" @close="onClose"
+               :content-wrapper-style="{height:160+'px'}">
+      <p id="genderA" @click="gender('男')">男</p>
+      <p id="genderB" @click="gender('女')">女</p>
+      <p id="genderC" @click="onClose">取消</p>
+    </a-drawer>
+  </div>
+
+
 </template>
 
 <script setup lang="ts">
 import {UserOutlined} from '@ant-design/icons-vue';
-import {computed, reactive } from "vue";
+import {computed, reactive, ref} from "vue";
 import {message} from "ant-design-vue";
 import {useRouter} from "vue-router";
-import {updateAvatar, userSignOut} from "@/helper/allRequest";
+import type { DrawerProps } from 'ant-design-vue';
+import {getUserInfo, saveUserInfo, updateAvatar, userSignOut} from "@/helper/allRequest";
+import {userInfoData} from "@/type/type";
 const router =useRouter()
 const avatar =computed(()=>{
   return  window.localStorage.getItem("node-avatar")
@@ -63,6 +85,54 @@ const imgState = reactive({
   imgSrc: avatar.value,
   error: false
 })
+
+const data=reactive<userInfoData>({
+  nickname:"未设置",
+  gender:"未设置",
+  phoneNumber:"未设置"
+})
+
+//手机号
+const value2 = ref<string>('');
+const phoneVisible = ref<boolean>(false);
+const showPhone = () => {
+  phoneVisible.value = true;
+};
+const phoneOk = () => {
+  data.phoneNumber=value2.value
+  phoneVisible.value = false;
+};
+
+
+//昵称
+const value1 = ref<string>('');
+const nicknameVisible = ref<boolean>(false);
+const showNickname = () => {
+  nicknameVisible.value = true;
+};
+const nicknameOk = () => {
+  data.nickname=value1.value
+  nicknameVisible.value = false;
+};
+
+
+//抽屉组件
+const placement = ref<DrawerProps['placement']>('bottom');
+const visibleX = ref<boolean>(false);
+const showDrawer = () => {
+  visibleX.value = true;
+};
+const onClose = () => {
+  visibleX.value = false;
+};
+const gender=(gender:string)=>{
+  data.gender=gender
+  visibleX.value = false
+}
+
+
+//网络请求
+//更新头像
 const handleFile = (e: Event) => {
   imgState.error = false
   const el = e.target as HTMLElement
@@ -80,37 +150,54 @@ const handleFile = (e: Event) => {
         resolve(reader.result as string)
         reject("")
       }).then((result) => {
-        imgState.imgSrc=result
+        imgState.imgSrc=result as string
         //更新头像
         const srcData={"srcData":result}
-        updateAvatar.request(srcData).then(()=>{},()=>{})
+        updateAvatar.request(srcData as {srcData:string}).then(()=>{},()=>{})
       })
     }
   }
 }
+
+
+//退出
 const signOut=()=>{
   userSignOut.request().then(()=>{
     message.success({
       content: () => '成功退出,正在跳转到登录页。。。',
-      duration:1,
+      duration:1.5,
       class: 'custom-class',
     })
     setTimeout(()=>{
       router.push("/signIn")
     },2000)
-  },()=>{
-    message.success({
-      content: () => '成功退出,正在跳转到登录页。。。',
-      duration:1,
-      class: 'custom-class',
-    })
   })
+}
+//获取用户信息
+getUserInfo.request().then((response)=>{
+  const res=response as userInfoData
+  res.gender&& (data.gender=res.gender)
+  res.nickname&&(data.nickname=res.nickname)
+  res.phoneNumber&&(data.phoneNumber=res.phoneNumber)
+},(res)=>{})
+//保存用户信息
+const saveInfo=()=>{
+  message.success({
+    content: () => '保存成功',
+    duration:1,
+    class: 'custom-class',
+  })
+   saveUserInfo.request(data).then()
 }
 </script>
 
+
+
 <style lang="scss" scoped>
 .infoWrap {
-
+  display: flex;
+  height: 100%;
+  flex-direction: column;
   > .header {
     padding: 12px 5px 12px 12px;
     background-color: #99CC66;
@@ -147,7 +234,6 @@ const signOut=()=>{
     > .saveWrap {
       > .save {
         font-size: 16px;
-
         > .icon {
           width: 1.5em;
           height: 1.5em;
@@ -159,17 +245,20 @@ const signOut=()=>{
     }
 
   }
-
   > .main {
-    padding: 0 20px;
+    flex-grow: 1;
+    background-color: #ffffff;
     > .same {
+      background-color: #ffffff;
       display: flex;
-      padding: 12px 0;
+      padding: 12px 20px;
       justify-content: space-between;
       align-items: center;
       box-shadow:inset 0 1px 0 0 rgb(0 0 0 / 10%);
       > label {
+        flex-grow: 1;
         color: black;
+
         > .imgFile {
           display: none;
         }
@@ -180,19 +269,30 @@ const signOut=()=>{
       justify-content: center;
       align-items: center;
       margin-top: 60px;
+      padding: 5px;
      >.button{
        border: none;
+       outline: transparent;
        border-radius: 10px;
-       background-color: #ff6a00;
+       color: black;
+       background-color: #FF9999;
      }
     }
   }
 }
+#genderA,#genderB,#genderC{
+  background-color: rgba(222, 222, 215, 0.5);
+  font-size: 16px;
+  color: #6699FF;
+
+  padding: 5px;
+  text-align: center;
+  border-radius: 10px;
+  margin-bottom: 5px;
+}
 </style>
-<style>
 
-
-
+<style lang="scss">
 .ant-message{
   margin-top: 10vh;
   position: absolute;
@@ -200,5 +300,13 @@ const signOut=()=>{
   display: flex;
   justify-content: center;
   width: 100%;
+  color: #FF9999;
+  span{
+    margin-left: 3px;
+  }
+  svg{
+    font-size: 1em;
+    vertical-align: center;
+  }
 }
 </style>

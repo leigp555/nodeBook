@@ -119,7 +119,8 @@ const onFinish = (values: FormState) => {
     })
   } else if (loginKind!.value === "register") {
     delete values.checkPass
-    register.request(values,router).then(()=>{},()=>{
+    register.request(values,router).then((res)=>{
+    },(res)=>{
       alterTip.value = true
       setTimeout(() => {
         alterTip.value = false

@@ -8,3 +8,10 @@ export interface loginObj{
     username:string|number,
     password:number|string,
 }
+
+
+export type userInfoData={
+    nickname:string,
+    gender:string,
+    phoneNumber:string
+}

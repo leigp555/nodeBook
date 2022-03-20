@@ -1,6 +1,6 @@
 import {netRequest} from "@/helper/netRequest";
 
-import {loginObj} from "@/type/type";
+import {loginObj, userInfoData} from "@/type/type";
 import {Router} from "vue-router";
 
 //登录页
@@ -21,11 +21,13 @@ export const signIn = {
 export const register = {
     request(userInfo: loginObj,router:Router) {
         return new Promise((resolve, reject) => {
-            netRequest("/register", "POST", userInfo).then(() => {
+            netRequest("/register", "POST", userInfo).then((res) => {
                 router.push("/signIn").then()
+                console.log(res)
                 resolve("注册成功")
-            }, () => {
+            }, (res) => {
                 reject("注册失败")
+                console.log(res)
             })
         })
     }
@@ -37,7 +39,6 @@ export const getAvatar = {
             let data
             netRequest("/getAvatar", "GET").then((res) => {       //获取头像
                 data = res as string
-                console.log(data)
                 window.localStorage.setItem("node-avatar", data)
                 resolve({msg:"获取成功",update:true})
             }, (res) => {
@@ -50,9 +51,9 @@ export const getAvatar = {
 }
 //更新头像
 export const updateAvatar = {
-    request(newAvatar) {
+    request(newAvatar:{srcData:string}) {
         return new Promise((resolve,reject) => {
-            netRequest("/getAvatar", "POST",newAvatar).then((res) => {
+            netRequest("/getAvatar", "POST",newAvatar).then(() => {
                 window.localStorage.setItem("node-avatar", newAvatar.srcData)
                 resolve({msg:"更新成功",update:true})
             }, () => {
@@ -117,6 +118,29 @@ export const userSignOut={
             netRequest("/user/signOut", "POST").then((res) => {
                 resolve(res)
             }, (res) => {
+                reject(res)
+            })
+        })
+    }
+}
+
+export const getUserInfo={
+    request(){
+        return new Promise((resolve,reject)=>{
+            netRequest("/user/info","GET").then((res)=>{
+                resolve(res)
+            },(res)=>{
+                reject(res)
+            })
+        })
+    }
+}
+export const saveUserInfo={
+    request(data:userInfoData){
+        return new Promise((resolve,reject)=>{
+            netRequest("/user/info","POST",data).then((res)=>{
+                resolve(res)
+            },(res)=>{
                 reject(res)
             })
         })
