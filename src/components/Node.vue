@@ -37,15 +37,14 @@
   </div>
 </template>
 <script lang="ts" setup>
-import {ref} from "vue";
-import NodeBooks from "@/components/NodeBooks.vue";
 import { BookOutlined, HeartOutlined, DeleteOutlined,SearchOutlined} from '@ant-design/icons-vue';
+import Header from "@/components/Header.vue"
 import Collection from "@/components/Collection.vue";
 import Garbage from "@/components/Garbage.vue";
-import {request} from "@/helper/netRequest";
-const activeKey = ref<string>("1")
-import Header from "@/components/Header.vue"
+import NodeBooks from "@/components/NodeBooks.vue";
 import Search from "@/components/Search.vue";
+import {ref} from "vue";
+const activeKey = ref<string>("1")
 </script>
 
 <style lang="scss" scoped>

@@ -1,5 +1,4 @@
 import axios from "axios";
-
 axios.defaults.baseURL = 'http://localhost:8888';
 axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
 axios.defaults.withCredentials=true
@@ -11,8 +10,7 @@ interface requestOption {
     params?: {},
     data?: {}
 }
-
-export const request = (url: string, type = "GET", data = {}) => {
+export const netRequest = (url: string, type = "GET", data = {}) => {
     return new Promise((resolve, reject) => {
         let option: requestOption = {
             url,

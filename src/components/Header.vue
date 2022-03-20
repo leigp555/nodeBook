@@ -32,10 +32,9 @@
 </template>
 
 <script lang="ts" setup>
-import {reactive, ref, watchEffect} from "vue";
-import {request} from "@/helper/netRequest";
-import {UserOutlined} from '@ant-design/icons-vue';
-import {updateAvatar} from "@/helper/updateAvatar";
+import {reactive, ref} from "vue";
+import {getUserState} from "@/helper/allRequest";
+
 const dataState=reactive({
   isPunch:false,
   userName:"用户名",
@@ -49,14 +48,16 @@ const punch=()=>{
   }
   dataState.isPunch=true
 }
-watchEffect(()=>{
-
-})
 const avatarSrc = ref<string>("")
-updateAvatar().then((res)=>{
-  avatarSrc.value=res
+getUserState.request().then((res)=>{
+  if(res.land){
+    avatarSrc.value=window.localStorage.getItem("node-avatar")
+  }else {
+    avatarSrc.value=''
+  }
+},()=>{
+  avatarSrc.value=''
 })
-
 </script>
 
 <style lang="scss" scoped>

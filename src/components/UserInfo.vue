@@ -51,11 +51,10 @@
 
 <script setup lang="ts">
 import {UserOutlined} from '@ant-design/icons-vue';
-import {computed, reactive, ref, watchEffect} from "vue";
-import {request} from "@/helper/netRequest";
-import {updateAvatar} from "@/helper/updateAvatar";
+import {computed, reactive } from "vue";
 import {message} from "ant-design-vue";
 import {useRouter} from "vue-router";
+import {updateAvatar, userSignOut} from "@/helper/allRequest";
 const router =useRouter()
 const avatar =computed(()=>{
   return  window.localStorage.getItem("node-avatar")
@@ -79,28 +78,31 @@ const handleFile = (e: Event) => {
     reader.onloadend = function () {
       return new Promise((resolve, reject) => {
         resolve(reader.result as string)
-        reject("error")
+        reject("")
       }).then((result) => {
-        request("/loadPng", "POST", result as string).then((res) => {
-          imgState.imgSrc = res as string
-          updateAvatar()
-        })
+        imgState.imgSrc=result
+        //更新头像
+        updateAvatar.request(result as string).then(()=>{},()=>{})
       })
     }
   }
-
 }
 const signOut=()=>{
-  message.success({
-    content: () => '成功退出,正在跳转到登录页。。。',
-    duration:1,
-    class: 'custom-class',
-  });
-  request("/user/signOut","POST").then((res)=>{
-    updateAvatar()
+  userSignOut.request().then(()=>{
+    message.success({
+      content: () => '成功退出,正在跳转到登录页。。。',
+      duration:1,
+      class: 'custom-class',
+    })
     setTimeout(()=>{
       router.push("/signIn")
     },2000)
+  },()=>{
+    message.success({
+      content: () => '成功退出,正在跳转到登录页。。。',
+      duration:1,
+      class: 'custom-class',
+    })
   })
 }
 </script>

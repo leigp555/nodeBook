@@ -1,5 +1,5 @@
 <template>
-  <Login login="register"/>
+  <Login loginKind="register"/>
 </template>
 
 <script setup lang="ts">

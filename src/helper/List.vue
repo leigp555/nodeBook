@@ -25,11 +25,8 @@
   </div>
 </template>
 <script lang="ts" setup>
-import {computed, onMounted, ref} from 'vue';
-import {request} from "@/helper/netRequest";
-import {useStore} from "vuex";
-
-
+import { onMounted, ref} from 'vue';
+import {getAllNodes, getCollection, getGarbage, getUserState} from "@/helper/allRequest";
 const count = 3;
 const fakeDataUrl = `https://randomuser.me/api/?results=${count}&inc=name,gender,email,nat,picture&noinfo`;
 const initLoading = ref(true);
@@ -44,23 +41,7 @@ onMounted(() => {
         data.value = res.results;
         list.value = res.results;
       });
-  request("/nodeBooks", "GET").then((res) => {       //获取登录状态
-    console.log(res)
-  })
-  request("/getAvatar", "GET").then((res) => {       //获取头像
-
-  })
-  request("/getNodes", "GET").then((res) => {        //获取所有笔记
-    console.log(res)
-  })
-  request("/getCollection", "GET").then((res) => {     //获取所有收藏
-    console.log(res)
-  })
-  request("/getGarbage", "GET").then((res) => {        //获取所有回收站
-    console.log(res)
-  })
 });
-
 const onLoadMore = () => {
   loading.value = true;
   //@ts-ignore
@@ -74,6 +55,29 @@ const onLoadMore = () => {
         list.value = newData;
       });
 }
+
+//获取登陆状态
+getUserState.request().then((res)=>{
+  if(res.land){
+    //vuex设置land设置未true
+  }else{
+    //vuex设置land设置未false
+  }
+},()=>{
+    //vuex设置land设置未false
+})
+
+//确认登录后获取所有笔记本
+getAllNodes.request().then((res)=>{}, (res)=>{})
+//确认登录后获取所有收藏
+getCollection.request().then((res)=>{}, (res)=>{})
+//确认登录后获取所有垃圾站
+getGarbage.request().then((res)=>{}, (res)=>{})
+
+
+
+
+
 
 </script>
 
