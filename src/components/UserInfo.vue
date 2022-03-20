@@ -82,7 +82,8 @@ const handleFile = (e: Event) => {
       }).then((result) => {
         imgState.imgSrc=result
         //更新头像
-        updateAvatar.request(result as string).then(()=>{},()=>{})
+        const srcData={"srcData":result}
+        updateAvatar.request(srcData).then(()=>{},()=>{})
       })
     }
   }

@@ -34,7 +34,7 @@
 <script lang="ts" setup>
 import {reactive, ref} from "vue";
 import {getUserState} from "@/helper/allRequest";
-
+import {UserOutlined} from '@ant-design/icons-vue';
 const dataState=reactive({
   isPunch:false,
   userName:"用户名",

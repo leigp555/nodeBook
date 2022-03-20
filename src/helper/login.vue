@@ -60,12 +60,13 @@
 
 
 <script lang="ts" setup>
-import {UserOutlined, LockOutlined} from '@ant-design/icons-vue';
 import {reactive, ref, toRefs} from "vue";
 import {FormState} from "@/type/type";
 import {useRouter} from "vue-router";
 import {RuleObject} from "ant-design-vue/es/form";
-import {register, signIn} from "@/helper/allRequest";
+import {UserOutlined, LockOutlined} from '@ant-design/icons-vue';
+import {getAvatar, register, signIn} from "@/helper/allRequest";
+
 const router = useRouter()
 const props = defineProps<{
   loginKind: "signIn"|"register"
@@ -106,7 +107,11 @@ avatarSrc.value=string
 const alterTip = ref<boolean>(false)
 const onFinish = (values: FormState) => {
   if (loginKind!.value === "signIn") {
-    signIn.request(values,router).then(()=>{},()=>{
+    signIn.request(values,router).then(()=>{
+      getAvatar.request().then(()=>{
+        avatarSrc.value=window.localStorage.getItem("node-avatar") || ""
+      },()=>{})
+    },()=>{
       alterTip.value = true
       setTimeout(() => {
         alterTip.value = false

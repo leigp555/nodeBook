@@ -7,12 +7,12 @@ import {Router} from "vue-router";
 export const signIn = {
     request(userInfo: loginObj,router:Router) {
         return new Promise((resolve, reject) => {
-            netRequest("/signIn", "POST", userInfo).then(() => {
+            netRequest("/signIn", "POST", userInfo).then((res) => {
                 router.push("/").then()
                 getAvatar.request().then()
-                resolve("登录成功")
-            }, () => {
-                reject("登录失败")
+                resolve(res)
+            }, (res) => {
+                reject(res)
             })
         })
     }
@@ -31,12 +31,13 @@ export const register = {
     }
 }
 //获取用户头像并存在本地localstorage
-const getAvatar = {
+export const getAvatar = {
     request() {
         return new Promise((resolve,reject) => {
             let data
             netRequest("/getAvatar", "GET").then((res) => {       //获取头像
                 data = res as string
+                console.log(data)
                 window.localStorage.setItem("node-avatar", data)
                 resolve({msg:"获取成功",update:true})
             }, (res) => {
@@ -49,10 +50,10 @@ const getAvatar = {
 }
 //更新头像
 export const updateAvatar = {
-    request(newAvatar:string) {
+    request(newAvatar) {
         return new Promise((resolve,reject) => {
-            netRequest("/getAvatar", "PATCH",newAvatar).then((res) => {
-                window.localStorage.setItem("node-avatar", newAvatar)
+            netRequest("/getAvatar", "POST",newAvatar).then((res) => {
+                window.localStorage.setItem("node-avatar", newAvatar.srcData)
                 resolve({msg:"更新成功",update:true})
             }, () => {
                reject({msg:"更新失败",update:false})
@@ -109,7 +110,7 @@ export const getGarbage={
         })
     }
 }
-
+//退出登录
 export const userSignOut={
     request(){
         return new Promise((resolve,reject)=>{
