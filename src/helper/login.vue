@@ -67,6 +67,7 @@ import {useRouter} from "vue-router";
 import {RuleObject} from "ant-design-vue/es/form";
 import {request} from "@/helper/netRequest"
 import {useStore} from "vuex";
+import {updateAvatar} from "@/helper/updateAvatar";
 
 type loginX = {
   login: "signIn" | "register"
@@ -110,6 +111,7 @@ const onFinish = (values: FormState) => {
     request("/signIn", "POST", values).then(() => {
       router.push("/")
       store.commit("modifyCurrentUser", values)
+      updateAvatar()
     }, () => {
       alterTip.value = true
       setTimeout(() => {

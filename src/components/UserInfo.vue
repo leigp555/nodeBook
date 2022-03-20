@@ -47,19 +47,21 @@
       </div>
     </div>
   </div>
-
-
 </template>
 
 <script setup lang="ts">
 import {UserOutlined} from '@ant-design/icons-vue';
-import {reactive, ref} from "vue";
+import {computed, reactive, ref, watchEffect} from "vue";
 import {request} from "@/helper/netRequest";
 import {updateAvatar} from "@/helper/updateAvatar";
-
-const avatar = window.localStorage.getItem("node-avatar")
+import {message} from "ant-design-vue";
+import {useRouter} from "vue-router";
+const router =useRouter()
+const avatar =computed(()=>{
+  return  window.localStorage.getItem("node-avatar")
+})
 const imgState = reactive({
-  imgSrc: avatar,
+  imgSrc: avatar.value,
   error: false
 })
 const handleFile = (e: Event) => {
@@ -89,8 +91,16 @@ const handleFile = (e: Event) => {
 
 }
 const signOut=()=>{
+  message.success({
+    content: () => '成功退出,正在跳转到登录页。。。',
+    duration:1,
+    class: 'custom-class',
+  });
   request("/user/signOut","POST").then((res)=>{
-    console.log(res)
+    updateAvatar()
+    setTimeout(()=>{
+      router.push("/signIn")
+    },2000)
   })
 }
 </script>
@@ -174,7 +184,18 @@ const signOut=()=>{
      }
     }
   }
+}
+</style>
+<style>
 
 
+
+.ant-message{
+  margin-top: 10vh;
+  position: absolute;
+  top:0;
+  display: flex;
+  justify-content: center;
+  width: 100%;
 }
 </style>
