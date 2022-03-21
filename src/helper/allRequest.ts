@@ -77,9 +77,9 @@ export const getUserState={
 }
 //获取少量的笔记
 export const getNodes={
-    request(url:string){
+    request(url:string,initRang:string){
         return new Promise((resolve,reject)=>{
-            netRequest(url, "GET").then((res) => {
+            netRequest(url, "GET", {initRang}).then((res) => {
                 resolve(res)
             }, (res) => {
                 reject(res)
@@ -89,9 +89,9 @@ export const getNodes={
 }
 //加载更多笔记
 export const getMoreNodes={
-    request(url:string){
+    request(url:string,initRang:string){
         return new Promise((resolve,reject)=>{
-            netRequest(url, "GET").then((res) => {
+            netRequest(url, "GET",{initRang}).then((res) => {
                 resolve(res)
             }, (res) => {
                 reject(res)

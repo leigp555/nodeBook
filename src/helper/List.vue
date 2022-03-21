@@ -3,9 +3,9 @@
     <a-list class="listWrap" :loading="initLoading" item-layout="horizontal" :data-source="list">
       <template #renderItem="{ item }">
         <a-list-item>
-          <a-skeleton :title="false" :loading="!!item.loading" active>
-            <a-list-item-meta :description="item.content">
-              <template #title><a href="https://www.antdv.com/">{{ item.title }}</a></template>
+          <a-skeleton :title="false" :loading="loading" active>
+            <a-list-item-meta :description="hiddenText(item.content)">
+              <template #title ><p id="nodeTitle">{{ item.title }}</p></template>
             </a-list-item-meta>
           </a-skeleton>
           <template #actions>
@@ -29,11 +29,11 @@
 import {computed, onMounted, ref} from 'vue';
 import {getMoreNodes, getNodes, getUserState} from "@/helper/allRequest";
 const initLoading = ref(true);
-const loading = ref(false);
+const loading = ref(true);
 const data = ref<resNodeType>([]);
 const list = ref<resNodeType>([]);
 const end=ref<boolean>(false)
-
+const rangItem=ref<number>(0)
 type resNodeType = {title: string, content: string}[]
 interface listType{
   kind: "nodeBooks"|"collection"|"garbage"|"search"
@@ -62,11 +62,14 @@ const requestMoreUrl=computed(()=>{
   }
 })
 onMounted(() => {
+  rangItem.value=0
+  const initRang=JSON.stringify([0,(rangItem.value+3)])
+  rangItem.value+=3
   //确认登录后部分笔记
-  getNodes.request(requestUrl.value!).then((response) => {
-    console.log(response)
+  getNodes.request(requestUrl.value!,initRang).then((response) => {
     const res= response as resNodeType
     initLoading.value = false;
+    loading.value=false
     data.value = res;
     list.value = res;
   }, (res) => {
@@ -75,18 +78,18 @@ onMounted(() => {
 });
 const onLoadMore = () => {
   if(!end.value){
-    getMoreNodes.request(requestMoreUrl.value!).then((response) => {
+    loading.value = true;
+    const initRang=JSON.stringify([rangItem.value,(rangItem.value+3)])
+    rangItem.value+=3
+    getMoreNodes.request(requestMoreUrl.value!,initRang).then((response) => {
       const res=response as resNodeType
       if(res[0]){
-        loading.value = true;
-        const count = 3
-        //@ts-ignore
-        list.value = data.value.concat([...new Array(count)].map(() => ({loading: true, name: {}, picture: {}})))
         const newData = data.value.concat(res as resNodeType);
         loading.value = false;
         data.value = newData;
         list.value = newData;
       }else{
+        loading.value = false
         end.value=true
       }
     })
@@ -103,6 +106,14 @@ getUserState.request().then((response) => {
   // console.log(res)
 })
 
+//文字超长隐藏
+const hiddenText=(text:string)=>{
+  if(text.length>14){
+    return text.substring(0,14)+"..."
+  }else {
+    return text
+  }
+}
 </script>
 
 
@@ -113,5 +124,12 @@ getUserState.request().then((response) => {
   > .listWrap {
     min-height: 350px;
   }
+}
+#nodeTitle{
+  max-width: 8em;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  margin-bottom: 0;
 }
 </style>
