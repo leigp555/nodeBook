@@ -2,7 +2,7 @@ import axios from "axios";
 axios.defaults.baseURL = 'http://localhost:8888';
 axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
 axios.defaults.withCredentials=true
-axios.defaults.timeout = 3000;
+axios.defaults.timeout = 6000;
 interface requestOption {
     url: string,
     method: string,

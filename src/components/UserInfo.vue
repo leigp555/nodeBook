@@ -269,13 +269,14 @@ const saveInfo=()=>{
       justify-content: center;
       align-items: center;
       margin-top: 60px;
-      padding: 5px;
+      padding: 10px 14px;
      >.button{
        border: none;
        outline: transparent;
        border-radius: 10px;
+       text-align: center;
        color: black;
-       background-color: #FF9999;
+       background-color: #1890ff;
      }
     }
   }
@@ -293,6 +294,11 @@ const saveInfo=()=>{
 </style>
 
 <style lang="scss">
+.custom-class{
+  padding: 15px 10px;
+  background-color: #ffffff;
+  box-shadow: 0 0 1px 1px rgba(0,0,0,.1);
+}
 .ant-message{
   margin-top: 10vh;
   position: absolute;
@@ -300,13 +306,14 @@ const saveInfo=()=>{
   display: flex;
   justify-content: center;
   width: 100%;
-  color: #FF9999;
+  color: #626262;
   span{
     margin-left: 3px;
   }
   svg{
     font-size: 1em;
     vertical-align: center;
+    color: #1890ff;
   }
 }
 </style>

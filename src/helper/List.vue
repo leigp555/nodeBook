@@ -4,8 +4,8 @@
       <template #renderItem="{ item }">
         <a-list-item>
           <a-skeleton :title="false" :loading="!!item.loading" active>
-            <a-list-item-meta description="Ant Design, a design language for background applications">
-              <template #title><a href="https://www.antdv.com/">{{ item.name.last }}</a></template>
+            <a-list-item-meta :description="item.content">
+              <template #title><a href="https://www.antdv.com/">{{ item.title }}</a></template>
             </a-list-item-meta>
           </a-skeleton>
           <template #actions>
@@ -18,66 +18,90 @@
       <template #loadMore>
         <div v-if="!initLoading && !loading" class="loadMore"
              :style="{ textAlign: 'center', marginTop: '16px', height: '32px', lineHeight: '32px' }">
-          <a-button @click="onLoadMore">loading more</a-button>
+          <a-button v-if="!end" @click="onLoadMore">loading more</a-button>
+          <div v-if="end" class="noMore">没有更多了</div>
         </div>
       </template>
     </a-list>
   </div>
 </template>
 <script lang="ts" setup>
-import { onMounted, ref} from 'vue';
-import {getAllNodes, getCollection, getGarbage, getUserState} from "@/helper/allRequest";
-const count = 3;
-const fakeDataUrl = `https://randomuser.me/api/?results=${count}&inc=name,gender,email,nat,picture&noinfo`;
+import {computed, onMounted, ref} from 'vue';
+import {getMoreNodes, getNodes, getUserState} from "@/helper/allRequest";
 const initLoading = ref(true);
 const loading = ref(false);
-const data = ref([]);
-const list = ref([]);
+const data = ref<resNodeType>([]);
+const list = ref<resNodeType>([]);
+const end=ref<boolean>(false)
+
+type resNodeType = {title: string, content: string}[]
+interface listType{
+  kind: "nodeBooks"|"collection"|"garbage"|"search"
+}
+const props = defineProps<listType>()
+const requestUrl=computed(()=>{
+  if(props.kind==="nodeBooks"){
+    return "/getNodes"
+  }else if(props.kind==="collection"){
+    return "/getCollection"
+  }else if(props.kind==="garbage"){
+    return "/getGarbage"
+  }else if(props.kind==="search"){
+    return "/searchResult"
+  }
+})
+const requestMoreUrl=computed(()=>{
+  if(props.kind==="nodeBooks"){
+    return "/getMoreNodes"
+  }else if(props.kind==="collection"){
+    return "/getMoreCollection"
+  }else if(props.kind==="garbage"){
+    return "/getMoreGarbage"
+  }else if(props.kind==="search"){
+    return "/moreSearchResult"
+  }
+})
 onMounted(() => {
-  fetch(fakeDataUrl)
-      .then(res => res.json())
-      .then(res => {
-        initLoading.value = false;
-        data.value = res.results;
-        list.value = res.results;
-      });
+  //确认登录后部分笔记
+  getNodes.request(requestUrl.value!).then((response) => {
+    console.log(response)
+    const res= response as resNodeType
+    initLoading.value = false;
+    data.value = res;
+    list.value = res;
+  }, (res) => {
+    alert(res.msg)
+  })
 });
 const onLoadMore = () => {
-  loading.value = true;
-  //@ts-ignore
-  list.value = data.value.concat([...new Array(count)].map(() => ({loading: true, name: {}, picture: {}})));
-  fetch(fakeDataUrl)
-      .then(res => res.json())
-      .then(res => {
-        const newData = data.value.concat(res.results);
+  if(!end.value){
+    getMoreNodes.request(requestMoreUrl.value!).then((response) => {
+      const res=response as resNodeType
+      if(res[0]){
+        loading.value = true;
+        const count = 3
+        //@ts-ignore
+        list.value = data.value.concat([...new Array(count)].map(() => ({loading: true, name: {}, picture: {}})))
+        const newData = data.value.concat(res as resNodeType);
         loading.value = false;
         data.value = newData;
         list.value = newData;
-      });
+      }else{
+        end.value=true
+      }
+    })
+  }else {
+    return
+  }
+
 }
 
+
 //获取登陆状态
-getUserState.request().then((res)=>{
-  if(res.land){
-    //vuex设置land设置未true
-  }else{
-    //vuex设置land设置未false
-  }
-},()=>{
-    //vuex设置land设置未false
+getUserState.request().then((response) => {
+  const res = response as { land: boolean, message: string }
+  // console.log(res)
 })
-
-//确认登录后获取所有笔记本
-getAllNodes.request().then((res)=>{}, (res)=>{})
-//确认登录后获取所有收藏
-getCollection.request().then((res)=>{}, (res)=>{})
-//确认登录后获取所有垃圾站
-getGarbage.request().then((res)=>{}, (res)=>{})
-
-
-
-
-
 
 </script>
 

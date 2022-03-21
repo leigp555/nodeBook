@@ -2,7 +2,7 @@
   <div class="headerWrap">
     <div class="slideTop" >
       <div class="avatarWrap">
-        <router-link to="/userInfo">
+        <router-link :to=linkX>
           <a-avatar :size="42" :src="avatarSrc" class="avatar">
             <template #icon>
               <UserOutlined/>
@@ -39,22 +39,29 @@ import {getUserStateType} from "@/type/type";
 const dataState=reactive({
   isPunch:false,
   nickName:"未登录",
-  totalPunch:10,
-  totalDay:50,
-  totalNode:100
+  totalPunch:0,
+  totalDay:0,
+  totalNode:0
 })
-
+const linkX=ref<string>("/userInfo")
 const punch=()=>{
-  getUserState.request().then((response)=>{
-    const res=response as {land:boolean,username:string}
-    if(res.land&&!dataState.isPunch){
-      dataState.totalPunch+=1
-      punched.request().then((res)=>{         //记录打卡
-      },()=>{})
-      dataState.isPunch=true
-    }
-  },()=>{})
+  if(!dataState.isPunch){
+    getUserState.request().then((response)=>{
+      const res=response as {land:boolean,username:string}
+      if(res.land){
+        dataState.totalPunch+=1
+        punched.request().then((response)=>{      //记录打卡
+          const res=response as {msg: string, punkDay: number}
+          dataState.totalPunch=res.punkDay
+        },()=>{})
+        dataState.isPunch=true
+      }else{
 
+      }
+    },()=>{
+      dataState.isPunch=false
+    })
+  }
 }
 const avatarSrc = ref<string>("")
 getUserState.request().then((response)=>{
@@ -69,11 +76,18 @@ getUserState.request().then((response)=>{
 })
 
 //网络请求
+//获取用户是否登录
+getUserState.request().then((response)=>{
+  const res=response as {land:boolean,username:string}
+  if(!res.land)linkX.value="/signIn"
+})
 //获取用用户打卡状态
 punchState.request().then((response)=>{
-  const res=response as { "punk": boolean ,nickname:""}
+  const res=response as { "punk": boolean ,nickname:"",punkDay: number,land:boolean,totalRecordDay:number}
   dataState.isPunch=res.punk
+  dataState.totalPunch=res.punkDay
   dataState.nickName&&(dataState.nickName=res.nickname)
+  dataState.totalDay=res.totalRecordDay
 },(res)=>{})
 
 

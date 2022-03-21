@@ -12,10 +12,10 @@
     </div>
     <div class="searchResult">
       <div class="content" v-if="haveContent">
-        <List kind="garbage"/>
+        <List kind="search"/>
       </div>
       <div class="null" v-if="!haveContent">
-        <a-empty :description="null"/>
+        <a-empty description="什么也没有"/>
       </div>
     </div>
   </div>

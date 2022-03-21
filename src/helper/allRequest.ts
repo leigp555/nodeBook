@@ -75,11 +75,11 @@ export const getUserState={
         })
     }
 }
-//获取所有的笔记
-export const getAllNodes={
-    request(){
+//获取少量的笔记
+export const getNodes={
+    request(url:string){
         return new Promise((resolve,reject)=>{
-            netRequest("/getAllNode", "GET").then((res) => {
+            netRequest(url, "GET").then((res) => {
                 resolve(res)
             }, (res) => {
                 reject(res)
@@ -87,11 +87,11 @@ export const getAllNodes={
         })
     }
 }
-//获取所有的收藏
-export const getCollection={
-    request(){
+//加载更多笔记
+export const getMoreNodes={
+    request(url:string){
         return new Promise((resolve,reject)=>{
-            netRequest("/getCollection", "GET").then((res) => {
+            netRequest(url, "GET").then((res) => {
                 resolve(res)
             }, (res) => {
                 reject(res)
@@ -99,18 +99,7 @@ export const getCollection={
         })
     }
 }
-//获取所有的回收站笔记
-export const getGarbage={
-    request(){
-        return new Promise((resolve,reject)=>{
-            netRequest("/getGarbage", "GET").then((res) => {
-                resolve(res)
-            }, (res) => {
-                reject(res)
-            })
-        })
-    }
-}
+
 //退出登录
 export const userSignOut={
     request(){
