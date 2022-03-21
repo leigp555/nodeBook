@@ -123,7 +123,7 @@ export const userSignOut={
         })
     }
 }
-
+//获取用户设置的信息
 export const getUserInfo={
     request(){
         return new Promise((resolve,reject)=>{
@@ -135,6 +135,7 @@ export const getUserInfo={
         })
     }
 }
+//修改用户设置的信息
 export const saveUserInfo={
     request(data:userInfoData){
         return new Promise((resolve,reject)=>{
@@ -146,3 +147,28 @@ export const saveUserInfo={
         })
     }
 }
+//获取打卡状态
+export const punchState={
+    request(){
+        return new Promise((resolve,reject)=>{
+            netRequest("/user/punchState","GET").then((res)=>{
+                resolve(res)
+            },(res)=>{
+                reject(res)
+            })
+        })
+    }
+}
+//打卡
+export const punched={
+    request(){
+        return new Promise((resolve,reject)=>{
+            netRequest("/user/punched","GET").then((res)=>{
+                resolve(res)
+            },(res)=>{
+                reject(res)
+            })
+        })
+    }
+}
+

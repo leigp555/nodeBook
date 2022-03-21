@@ -9,7 +9,7 @@
             </template>
           </a-avatar>
         </router-link>
-        <span>{{dataState.userName}}</span>
+        <span class="nickname">{{dataState.nickName}}</span>
       </div>
       <a-button type="primary" v-if="dataState.isPunch" class="button" @click="punch">已打卡</a-button>
       <a-button type="primary" v-else class="button noPunch" @click="punch">未打卡</a-button>
@@ -33,31 +33,50 @@
 
 <script lang="ts" setup>
 import {reactive, ref} from "vue";
-import {getUserState} from "@/helper/allRequest";
+import {getUserState, punched, punchState} from "@/helper/allRequest";
 import {UserOutlined} from '@ant-design/icons-vue';
+import {getUserStateType} from "@/type/type";
 const dataState=reactive({
   isPunch:false,
-  userName:"用户名",
+  nickName:"未登录",
   totalPunch:10,
   totalDay:50,
   totalNode:100
 })
+
 const punch=()=>{
-  if (!dataState.isPunch){
-    dataState.totalPunch+=1
-  }
-  dataState.isPunch=true
+  getUserState.request().then((response)=>{
+    const res=response as {land:boolean,username:string}
+    if(res.land&&!dataState.isPunch){
+      dataState.totalPunch+=1
+      punched.request().then((res)=>{         //记录打卡
+      },()=>{})
+      dataState.isPunch=true
+    }
+  },()=>{})
+
 }
 const avatarSrc = ref<string>("")
-getUserState.request().then((res)=>{
+getUserState.request().then((response)=>{
+  const res=response as getUserStateType
   if(res.land){
-    avatarSrc.value=window.localStorage.getItem("node-avatar")
+    avatarSrc.value=window.localStorage.getItem("node-avatar")!
   }else {
     avatarSrc.value=''
   }
 },()=>{
   avatarSrc.value=''
 })
+
+//网络请求
+//获取用用户打卡状态
+punchState.request().then((response)=>{
+  const res=response as { "punk": boolean ,nickname:""}
+  dataState.isPunch=res.punk
+  dataState.nickName&&(dataState.nickName=res.nickname)
+},(res)=>{})
+
+
 </script>
 
 <style lang="scss" scoped>
@@ -82,6 +101,12 @@ getUserState.request().then((res)=>{
       }
     }
     .avatarWrap {
+      >.nickname{
+        max-width: 5em;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
       >a>.avatar{
         box-shadow: 0 0 1px 2px rgba(255,255,255,.5);
       }
