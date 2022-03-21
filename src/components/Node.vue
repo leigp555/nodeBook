@@ -46,9 +46,6 @@ import Search from "@/components/Search.vue";
 import {ref} from "vue";
 import {getNodes} from "@/helper/allRequest";
 const activeKey = ref<string>("1")
-getNodes.request().then((res)=>{
-
-},()=>{})
 </script>
 
 <style lang="scss" scoped>

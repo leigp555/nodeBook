@@ -2,7 +2,8 @@
   <div class="wrap">
     <a-list class="listWrap" :loading="initLoading" item-layout="horizontal" :data-source="list">
       <template #renderItem="{ item }">
-        <a-list-item>
+
+        <a-list-item >
           <a-skeleton :title="false" :loading="loading" active>
             <a-list-item-meta :description="hiddenText(item.content)">
               <template #title ><p id="nodeTitle">{{ item.title }}</p></template>
