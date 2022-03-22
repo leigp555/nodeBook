@@ -2,19 +2,20 @@
   <div class="wrap">
     <a-list class="listWrap" :loading="initLoading" item-layout="horizontal" :data-source="list">
       <template #renderItem="{ item }">
-
-        <a-list-item >
-          <a-skeleton :title="false" :loading="loading" active>
-            <a-list-item-meta :description="hiddenText(item.content)">
-              <template #title ><p id="nodeTitle">{{ item.title }}</p></template>
-            </a-list-item-meta>
-          </a-skeleton>
-          <template #actions>
-            <a key="list-loadmore-edit">编辑</a>
-            <a key="list-loadmore-more">收藏</a>
-            <a key="list-loadmore-more">删除</a>
-          </template>
-        </a-list-item>
+        <router-link :to="'/node/currentNode/'+item.nodeId">
+          <a-list-item >
+            <a-skeleton :title="false" :loading="loading" active>
+              <a-list-item-meta :description="hiddenText(item.content)">
+                <template #title ><p id="nodeTitle">{{ item.title }}</p></template>
+              </a-list-item-meta>
+            </a-skeleton>
+            <template #actions>
+              <a key="list-loadmore-edit">编辑</a>
+              <a key="list-loadmore-more">收藏</a>
+              <a key="list-loadmore-more">删除</a>
+            </template>
+          </a-list-item>
+        </router-link>
       </template>
       <template #loadMore>
         <div v-if="!initLoading && !loading" class="loadMore"
@@ -69,6 +70,7 @@ onMounted(() => {
   //确认登录后部分笔记
   getNodes.request(requestUrl.value!,initRang).then((response) => {
     const res= response as resNodeType
+    console.log(response)
     initLoading.value = false;
     loading.value=false
     data.value = res;
@@ -115,6 +117,7 @@ const hiddenText=(text:string)=>{
     return text
   }
 }
+
 </script>
 
 
