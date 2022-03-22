@@ -13,6 +13,6 @@ export const router=createRouter({
         {path:'/register',component:Register},
         {path:'/node',component:Node},
         {path:'/userInfo',component:UserInfo},
-        {path:'/node/currentNode/:nodeId',component:CurrentNode}
+        {path:'/node/currentNode/:fileName/:nodeId',component:CurrentNode}
     ]
 })

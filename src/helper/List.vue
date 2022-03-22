@@ -2,7 +2,7 @@
   <div class="wrap">
     <a-list class="listWrap" :loading="initLoading" item-layout="horizontal" :data-source="list">
       <template #renderItem="{ item }">
-        <router-link :to="'/node/currentNode/'+item.nodeId">
+        <router-link :to="routerUrl(item.nodeId)">
           <a-list-item >
             <a-skeleton :title="false" :loading="loading" active>
               <a-list-item-meta :description="hiddenText(item.content)">
@@ -70,7 +70,6 @@ onMounted(() => {
   //确认登录后部分笔记
   getNodes.request(requestUrl.value!,initRang).then((response) => {
     const res= response as resNodeType
-    console.log(response)
     initLoading.value = false;
     loading.value=false
     data.value = res;
@@ -115,6 +114,18 @@ const hiddenText=(text:string)=>{
     return text.substring(0,14)+"..."
   }else {
     return text
+  }
+}
+
+const routerUrl=(nodeId:number)=>{
+  if(props.kind==="nodeBooks"){
+    return `/node/currentNode/node/${nodeId}`
+  }else if(props.kind==="collection"){
+    return `/node/currentNode/collection/${nodeId}`
+  }else if(props.kind==="garbage"){
+    return `/node/currentNode/garbage/${nodeId}`
+  }else if(props.kind==="search"){
+    return `/node/currentNode/search/${nodeId}`
   }
 }
 

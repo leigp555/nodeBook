@@ -100,6 +100,19 @@ export const getMoreNodes={
     }
 }
 
+//获取当前的笔记内容
+export const getCurrentNode={
+    request(url:string,nodeInfo:{nodeId:string,fileName:string}){
+        return new Promise((resolve,reject)=>{
+            netRequest(url, "GET",{...nodeInfo}).then((res) => {
+                resolve(res)
+            }, (res) => {
+                reject(res)
+            })
+        })
+    }
+}
+
 //退出登录
 export const userSignOut={
     request(){
