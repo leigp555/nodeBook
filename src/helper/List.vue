@@ -4,6 +4,7 @@
       <template #renderItem="{ item }">
         <router-link :to="routerUrl(item.nodeId)">
           <a-list-item >
+            {{item.timeAt}}
             <a-skeleton :title="false" :loading="loading" active>
               <a-list-item-meta :description="hiddenText(item.content)">
                 <template #title ><p id="nodeTitle">{{ item.title }}</p></template>
