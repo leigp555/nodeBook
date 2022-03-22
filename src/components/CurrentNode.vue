@@ -20,7 +20,7 @@ const  textarea = ref<string>(nodeInitString)
 
 
 const route = useRoute()
-getCurrentNode.request("/getCurrentNode", route.params).then((res) => {
+getCurrentNode.request("/getCurrentNode", route.params as {nodeId:string,fileName:string}).then((res) => {
   console.log(res)
 })
 
