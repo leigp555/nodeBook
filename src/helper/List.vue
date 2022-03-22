@@ -1,28 +1,35 @@
 <template>
   <div class="wrap">
-    <a-list class="listWrap" :loading="initLoading" item-layout="horizontal" :data-source="list">
+    <a-list class="listWrap" :loading="initLoading" item-layout="horizontal" :data-source="list"  >
       <template #renderItem="{ item }">
         <router-link :to="routerUrl(item.nodeId)">
           <a-list-item >
-            {{item.timeAt}}
             <a-skeleton :title="false" :loading="loading" active>
               <a-list-item-meta :description="hiddenText(item.content)">
-                <template #title ><p id="nodeTitle">{{ item.title }}</p></template>
+                <template #title >
+                  <div class="titleWrapX">
+                    <div >
+                      <a-divider class="line" />
+                    </div>
+                    <div class="inner">
+                      <span id="nodeTitle">{{ item.title }}</span>
+                      <span> {{formatTime(item.timeAt)}}</span>
+                    </div>
+
+                  </div>
+
+                </template>
+
               </a-list-item-meta>
             </a-skeleton>
-            <template #actions>
-              <a key="list-loadmore-edit">编辑</a>
-              <a key="list-loadmore-more">收藏</a>
-              <a key="list-loadmore-more">删除</a>
-            </template>
           </a-list-item>
         </router-link>
       </template>
       <template #loadMore>
         <div v-if="!initLoading && !loading" class="loadMore"
              :style="{ textAlign: 'center', marginTop: '16px', height: '32px', lineHeight: '32px' }">
-          <a-button v-if="!end" @click="onLoadMore">loading more</a-button>
-          <div v-if="end" class="noMore">没有更多了</div>
+          <a-button v-if="!end" @click="onLoadMore">加载更多</a-button>
+          <div v-if="end" class="noMore">没有更多了, <a href="#">回到顶部?</a> </div>
         </div>
       </template>
     </a-list>
@@ -31,6 +38,7 @@
 <script lang="ts" setup>
 import {computed, onMounted, ref} from 'vue';
 import {getMoreNodes, getNodes, getUserState} from "@/helper/allRequest";
+import dayjs from "dayjs";
 const initLoading = ref(true);
 const loading = ref(true);
 const data = ref<resNodeType>([]);
@@ -130,16 +138,36 @@ const routerUrl=(nodeId:number)=>{
   }
 }
 
+
+const formatTime=(time:string)=>{
+  return dayjs(time).format("MM月DD日HH:mm")
+}
 </script>
 
 
 <style scoped lang="scss">
 .wrap {
-  padding: 20px;
+  padding:0 20px;
 
   > .listWrap {
     min-height: 350px;
   }
+  .noMore{
+    margin-top: 20px;
+
+  }
+  .titleWrapX{
+    .inner{
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+    }
+    .line{
+      margin-top: 0;
+      background-color:rgba(42,42,42,.2);
+    }
+  }
+
 }
 #nodeTitle{
   max-width: 8em;

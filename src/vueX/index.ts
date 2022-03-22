@@ -1,7 +1,8 @@
 import {createStore} from 'vuex'
 
 interface dataX {
-    user: { username: string | number, password: string | number }
+    user: { username: string | number, password: string | number },
+
 }
 
 export const store = createStore<dataX>({

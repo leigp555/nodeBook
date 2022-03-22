@@ -13,6 +13,7 @@ html, body {
 }
 #app{
   height: 100%;
+  border: 1px solid transparent;
 }
 #app.start{
   background-color:rgba(0, 0,0 ,.1) ;

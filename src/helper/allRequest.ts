@@ -1,6 +1,6 @@
 import {netRequest} from "@/helper/netRequest";
 
-import {loginObj, userInfoData} from "@/type/type";
+import {loginObj, nodeInfoType, userInfoData} from "@/type/type";
 import {Router} from "vue-router";
 
 //登录页
@@ -113,6 +113,19 @@ export const getCurrentNode={
     }
 }
 
+
+//修改笔记
+export const modifyNodeRse={
+    request(data:nodeInfoType){
+        return new Promise((resolve,reject)=>{
+            netRequest("/modifyUserNode", "POST",data).then((res) => {
+                resolve(res)
+            }, (res) => {
+                reject(res)
+            })
+        })
+    }
+}
 //退出登录
 export const userSignOut={
     request(){

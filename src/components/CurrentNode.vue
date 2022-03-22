@@ -1,47 +1,202 @@
 <template>
   <div class="article-wrapper">
-    <textarea class="input" v-model="textarea"/>
-    <VueMarkdownIt id="markdownArticle" :source='textarea' :plugins=markDownPlugins></VueMarkdownIt>
+    <header class="header">
+      <div class="iconWrap">
+        <router-link to="/">
+          <svg class="icon" aria-hidden="true">
+            <use xlink:href="#icon-fanhui"></use>
+          </svg>
+          <span>返回</span>
+        </router-link>
+      </div>
+      <div class="saveWrap">
+        <a-button type="text" class="save" @click="saveInfo">
+          <svg class="icon" aria-hidden="true">
+            <use xlink:href="#icon-baocun"></use>
+          </svg>
+        </a-button>
+      </div>
+    </header>
+    <main class="main">
+      <div class="showUserInput">
+        <a-input class="title" :bordered="false" v-model:value="title" placeholder="标题" autofocus @change="modifyNode"/>
+        <div class="article">
+          <textarea class="input" v-model="textarea" @change="modifyNode"/>
+          <div class="iconWrap" @click="preview">
+            <span>点击预览:</span>
+            <svg class="icon" aria-hidden="true">
+              <use xlink:href="#icon-yulan"></use>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </main>
   </div>
+  <a-drawer size="large" placement="bottom" :closable="false" :visible="markDownOutVisible" @close="onClose">
+    <ShowNode :visible="markDownOutVisible"/>
+  </a-drawer>
 </template>
 
 <script lang="ts" setup>
-import {useRoute} from "vue-router";
-import {getCurrentNode} from "@/helper/allRequest";
-//@ts-ignore
-import VueMarkdownIt from "vue3-markdown-it"
-
+import {useRoute, useRouter} from "vue-router";
+import { ExclamationCircleOutlined } from '@ant-design/icons-vue';
+import { createVNode} from 'vue';
+import { Modal } from 'ant-design-vue';
+import {getCurrentNode, modifyNodeRse} from "@/helper/allRequest";
+import ShowNode from "@/components/ShowNode.vue"
 import {ref} from "vue";
-import {nodeInitString} from "@/helper/nodeEx";
-import {markDownPlugins} from "@/helper/markdown-plugin.js";
-import "../helper/markdown.scss"
-import 'highlight.js/styles/monokai.css'
-const  textarea = ref<string>(nodeInitString)
-
-
+import {nodeInfoType} from "@/type/type";
+const router=useRouter()
 const route = useRoute()
-getCurrentNode.request("/getCurrentNode", route.params as {nodeId:string,fileName:string}).then((res) => {
-  console.log(res)
+const title = ref<string>('');
+const textarea = ref<string>('')
+const nodeId=ref<number>()
+//网络请求
+getCurrentNode.request("/getCurrentNode", route.params as { nodeId: string, fileName: string }).then((response) => {
+  const res = response as { nodeId: number, title: string, content: string }[]
+  title.value = res[0].title
+  textarea.value = res[0].content
+  nodeId.value=res[0].nodeId
 })
+const saveInfo = () => {
+  const article={title:title.value,article:textarea.value,nodeId:nodeId.value,fileName:route.params.fileName} as nodeInfoType
+  Modal.confirm({
+    title: '确定修改？',
+    cancelText:"取消",
+    okText:'确定',
+    icon: createVNode(ExclamationCircleOutlined),
+    onOk() {
+      modifyNodeRse.request(article).then((res)=>{
+      },(res)=>{
+        alert("修改失败")
+      })
+    },
+    onCancel() {},
+  });
+}
 
+const markDownOutVisible = ref<boolean>(false);
+const preview=()=>{
+  const article={title:title.value,article:textarea.value,nodeId:nodeId.value,fileName:route.params.fileName} as nodeInfoType
+  window.localStorage.setItem("__currentNode",JSON.stringify(article))
+  markDownOutVisible.value = true;
+}
+const modifyNode=()=>{
+  const article={title:title.value,article:textarea.value}
+  window.localStorage.setItem("__currentNode",JSON.stringify(article))
+}
 
+const onClose = () => {
+  markDownOutVisible.value = false;
+};
 </script>
 
 
 <style lang="scss" scoped>
 @import url("../helper/markdown.scss");
 .article-wrapper {
-  .input {
-    width: 100%;
-    height: 400px;
-    display: none;
+  height: 100%;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  > .header {
+    padding: 12px 5px 12px 12px;
+    background-color: #99CC66;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 16px;
+
+    > .iconWrap {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 5px;
+      text-align: center;
+
+      > a {
+        color: black;
+
+        > .icon {
+          width: 1.2em;
+          height: 1.2em;
+          vertical-align: -0.25em;
+          fill: currentColor;
+          overflow: hidden;
+        }
+
+        > span {
+          text-align: center;
+          vertical-align: center;
+        }
+      }
+    }
+
+    > .saveWrap {
+      > .save {
+        font-size: 16px;
+
+        > .icon {
+          width: 1.5em;
+          height: 1.5em;
+          vertical-align: -0.15em;
+          fill: currentColor;
+          overflow: hidden;
+        }
+      }
+    }
+
   }
-  #markdownArticle{
-    height: 100%;
+  > .main {
     padding-left: 8px;
     padding-right: 8px;
-    border-radius: 7px;
-    margin-top: 7px;
+    margin-top: 8px;
+    flex-grow: 10;
+    > .showUserInput {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      > .title {
+        border: none;
+        margin-bottom: 20px;
+        border-bottom: 1px solid black;
+        padding: 10px;
+        text-align: center;
+      }
+      >.article{
+        position: relative;
+        top: 0;
+        left: 0;
+        flex-grow: 10;
+        margin-bottom: 10px;
+        >.input {
+          height: 100%;
+          width: 100%;
+          padding: 15px 10px;
+        }
+        >.iconWrap{
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          position: absolute;
+          top: 5px;
+          gap: 2px;
+          right: 10px;
+          color: blue;
+          >.icon {
+            width: 1.4em; height:1.4em;
+            vertical-align: -0.15em;
+            fill: currentColor;
+            overflow: hidden;
+          }
+        }
+      }
+    }
+
   }
+
 }
+
 </style>
+
+

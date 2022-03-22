@@ -3,6 +3,7 @@ import Register from '@/components/Register.vue'
 import Node from '@/components/Node.vue'
 import UserInfo from "@/components/UserInfo.vue"
 import CurrentNode from "@/components/CurrentNode.vue"
+import ShowNode from "@/components/ShowNode.vue"
 import {createWebHashHistory,createRouter} from 'vue-router'
 const history=createWebHashHistory()
 export const router=createRouter({
@@ -13,6 +14,7 @@ export const router=createRouter({
         {path:'/register',component:Register},
         {path:'/node',component:Node},
         {path:'/userInfo',component:UserInfo},
-        {path:'/node/currentNode/:fileName/:nodeId',component:CurrentNode}
+        {path:'/node/currentNode/:fileName/:nodeId',component:CurrentNode},
+        {path:'/showNode',component:ShowNode},
     ]
 })

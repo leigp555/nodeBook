@@ -20,3 +20,10 @@ export interface getUserStateType {
     land: boolean,
     username: string
 }
+
+export interface nodeInfoType{
+    title:string,
+    article:string,
+    nodeId:number,
+    fileName:string
+}

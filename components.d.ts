@@ -44,10 +44,12 @@ declare module 'vue' {
     Node: typeof import('./src/components/Node.vue')['default']
     NodeBooks: typeof import('./src/components/NodeBooks.vue')['default']
     NodeContent: typeof import('./src/components/NodeContent.vue')['default']
+    NodeHeader: typeof import('./src/components/nodeHeader.vue')['default']
     Register: typeof import('./src/components/Register.vue')['default']
     Seach: typeof import('./src/components/seach.vue')['default']
     Search: typeof import('./src/components/Search.vue')['default']
     Seatch: typeof import('./src/components/Seatch.vue')['default']
+    ShowNode: typeof import('./src/components/ShowNode.vue')['default']
     SignIn: typeof import('./src/components/SignIn.vue')['default']
     UserInfo: typeof import('./src/components/UserInfo.vue')['default']
   }
