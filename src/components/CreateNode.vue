@@ -23,16 +23,17 @@
   <a-drawer size="large" placement="bottom" :closable="false" :visible="markDownOutVisible" @close="onClose">
     <ShowNode :visible="markDownOutVisible" createNode/>
   </a-drawer>
+  <a-button style="display: none" type="primary" @click="success"></a-button>
 </template>
 
 <script lang="ts" setup>
 import { ExclamationCircleOutlined,EyeOutlined ,SaveOutlined,HeartOutlined} from '@ant-design/icons-vue';
-import {createVNode, reactive} from 'vue';
+import {createVNode, onMounted, reactive} from 'vue';
 import { Modal } from 'ant-design-vue';
 import {createNewNode} from "@/helper/allRequest";
 import ShowNode from "@/components/ShowNode.vue"
 import {ref} from "vue";
-import {nodeInfoType} from "@/type/type";
+import { message } from 'ant-design-vue';
 import dayjs from "dayjs";
 
 const data=reactive({
@@ -65,7 +66,6 @@ const saveInfo = () => {
     icon: createVNode(ExclamationCircleOutlined),
     onOk() {
       createNewNode.request(article).then((res)=>{
-        alert("创建成功")
       },(res)=>{
         alert("修改失败")
       })
@@ -89,7 +89,12 @@ const onClose = () => {
 const collection=()=>{
    data.collection=!data.collection
 }
-
+const success = () => {
+  message.info('回到上次编辑');
+};
+onMounted(()=>{
+  success()
+})
 </script>
 
 

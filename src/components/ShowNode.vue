@@ -20,7 +20,7 @@ import Markdown from "vue3-markdown-it"
 import {nodeInitString} from "@/helper/nodeEx";
 //@ts-ignore
 import {markDownPlugins} from "@/helper/markdown-plugin.js";
-import {computed, ref, watchEffect} from "vue";
+import {ref, watchEffect} from "vue";
 import "../helper/markdown.scss"
 import 'highlight.js/styles/monokai.css'
 const textarea = ref<string>(nodeInitString)

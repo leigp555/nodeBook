@@ -153,6 +153,42 @@ export const createNewNode={
         })
     }
 }
+//删除笔记
+export const deleteNodeRes={
+    request(data:{nodeId:number}){
+        return new Promise((resolve,reject)=>{
+            netRequest("/deleteNode", "POST",data).then((res) => {
+                resolve(res)
+            }, (res) => {
+                reject(res)
+            })
+        })
+    }
+}
+//还原
+export const resetNode={
+    request(data:{nodeId:number}){
+        return new Promise((resolve,reject)=>{
+            netRequest("/resetNode", "POST",data).then((res) => {
+                resolve(res)
+            }, (res) => {
+                reject(res)
+            })
+        })
+    }
+}
+//永久删除
+export const foreverDeleteRes={
+    request(data:{nodeId:number}){
+        return new Promise((resolve,reject)=>{
+            netRequest("/foreverDelete", "POST",data).then((res) => {
+                resolve(res)
+            }, (res) => {
+                reject(res)
+            })
+        })
+    }
+}
 //退出登录
 export const userSignOut={
     request(){

@@ -18,9 +18,13 @@
       </div>
     </header>
     <div class="action">
-      <div class="button">
+      <div class="button" v-if="route.params.fileName!=='garbage'">
         <a-button class="action" @click="collection" type="link"><span style="margin-right:2px" ><heart-outlined :class="{clt:collectionState}"/></span>收藏</a-button>
         <a-button class="action" @click="deleteNode" type="link"><span style="margin-right:2px"><delete-outlined/>删除</span></a-button>
+      </div>
+      <div class="button" v-else>
+        <a-button class="action" @click="reset" type="link"><span style="margin-right:2px" ><redo-outlined /></span>还原</a-button>
+        <a-button class="action" @click="foreverDelete" type="link"><span style="margin-right:2px"><delete-outlined/>彻底删除</span></a-button>
       </div>
       <div class="iconWrap" @click="preview">
         <eye-outlined /><span>点击预览</span>
@@ -36,21 +40,27 @@
     </main>
   </div>
   <a-drawer size="large" placement="bottom" :closable="false" :visible="markDownOutVisible" @close="onClose">
-    <ShowNode :visible="markDownOutVisible"/>
+    <ShowNode :visible="markDownOutVisible" :create-node="false"/>
   </a-drawer>
 </template>
 
 <script lang="ts" setup>
 import {useRoute, useRouter} from "vue-router";
 import { ExclamationCircleOutlined,EyeOutlined } from '@ant-design/icons-vue';
-import { createVNode} from 'vue';
+import {createVNode, watchEffect} from 'vue';
 import { Modal } from 'ant-design-vue';
-import {getCurrentNode, modifyNodeRse, modifyNodeRseCollection} from "@/helper/allRequest";
+import {
+  getCurrentNode,
+  modifyNodeRse,
+  modifyNodeRseCollection,
+  deleteNodeRes,
+  resetNode,
+  foreverDeleteRes
+} from "@/helper/allRequest";
 import ShowNode from "@/components/ShowNode.vue"
 import {ref} from "vue";
 import {collectionType, nodeInfoType} from "@/type/type";
-import {HeartOutlined, DeleteOutlined} from '@ant-design/icons-vue';
-
+import {HeartOutlined, DeleteOutlined,RedoOutlined} from '@ant-design/icons-vue';
 
 const router=useRouter()
 const route = useRoute()
@@ -104,8 +114,28 @@ const collection=()=>{
   modifyNodeRseCollection.request(postData).then(()=>{})
 }
 const deleteNode=()=>{
+  Modal.confirm({
+    title: '确定删除？',
+    cancelText:"取消",
+    okText:'确定',
+    icon: createVNode(ExclamationCircleOutlined),
+    onOk() {
+      deleteNodeRes.request({nodeId:nodeId.value!}).then(()=>{},()=>{})
+      router.back()
+    },
+    onCancel() {},
+  });
 
 }
+const reset=()=>{
+  resetNode.request({nodeId:nodeId.value!}).then(()=>{})
+  router.back()
+}
+const foreverDelete=()=>{
+  foreverDeleteRes.request({nodeId:nodeId.value!}).then(()=>{})
+  router.back()
+}
+
 </script>
 
 
