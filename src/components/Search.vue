@@ -24,15 +24,9 @@
 import {ref} from 'vue';
 import List from "@/helper/List.vue"
 import {searchNodes} from "@/helper/allRequest";
-
-
-
 const value = ref<string>('');
 const haveContent = ref(true)
 const onSearch = (searchValue: string) => {
-  // searchNodes.request({value:searchValue}).then((res)=>{
-  //   console.log(res)
-  // })
   haveContent.value=true
 };
 </script>

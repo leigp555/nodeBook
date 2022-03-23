@@ -1,19 +1,19 @@
 <template>
   <div class="wrap">
-    <a-list class="listWrap" :loading="initLoading" item-layout="horizontal" :data-source="list"  >
+    <a-list class="listWrap" :loading="initLoading" item-layout="horizontal" :data-source="list">
       <template #renderItem="{ item }">
         <router-link :to="routerUrl(item.nodeId)">
-          <a-list-item >
+          <a-list-item>
             <a-skeleton :title="false" :loading="loading" active>
               <a-list-item-meta :description="hiddenText(item.content)">
-                <template #title >
+                <template #title>
                   <div class="titleWrapX">
-                    <div >
-                      <a-divider class="line" />
+                    <div>
+                      <a-divider class="line"/>
                     </div>
                     <div class="inner">
                       <span id="nodeTitle">{{ item.title }}</span>
-                      <span> {{formatTime(item.timeAt)}}</span>
+                      <span> {{ formatTime(item.timeAt) }}</span>
                     </div>
                   </div>
                 </template>
@@ -26,7 +26,7 @@
         <div v-if="!initLoading && !loading" class="loadMore"
              :style="{ textAlign: 'center', marginTop: '16px', height: '32px', lineHeight: '32px' }">
           <a-button v-if="!end" @click="onLoadMore">加载更多</a-button>
-          <div v-if="end" class="noMore">没有更多了, <a href="#">回到顶部?</a> </div>
+          <div v-if="end" class="noMore">没有更多了, <a href="#">回到顶部?</a></div>
         </div>
       </template>
     </a-list>
@@ -36,122 +36,140 @@
 import {computed, onMounted, ref, watchEffect} from 'vue';
 import {getMoreNodes, getNodes, getUserState, searchNodes} from "@/helper/allRequest";
 import dayjs from "dayjs";
+
 const initLoading = ref(true);
 const loading = ref(true);
 const data = ref<resNodeType>([]);
 const list = ref<resNodeType>([]);
-const end=ref<boolean>(false)
-const rangItem=ref<number>(0)
+const end = ref<boolean>(false)
+const rangItem = ref<number>(0)
 
-type resNodeType = {title: string, content: string}[]
-interface listType{
-  kind: "nodeBooks"|"collection"|"garbage"|"search",
-  haveContent?:boolean,
-  searchValue?:string
+type resNodeType = { title: string, content: string }[]
+
+interface listType {
+  kind: "nodeBooks" | "collection" | "garbage" | "search",
+  haveContent?: boolean,
+  searchValue?: string
 }
+
 const props = defineProps<listType>()
-const requestUrl=computed(()=>{
-  if(props.kind==="nodeBooks"){
+const requestUrl = computed(() => {
+  if (props.kind === "nodeBooks") {
     return "/getNodes"
-  }else if(props.kind==="collection"){
+  } else if (props.kind === "collection") {
     return "/getCollection"
-  }else if(props.kind==="garbage"){
+  } else if (props.kind === "garbage") {
     return "/getGarbage"
   }
 })
-const requestMoreUrl=computed(()=>{
-  if(props.kind==="nodeBooks"){
+const requestMoreUrl = computed(() => {
+  if (props.kind === "nodeBooks") {
     return "/getMoreNodes"
-  }else if(props.kind==="collection"){
+  } else if (props.kind === "collection") {
     return "/getMoreCollection"
-  }else if(props.kind==="garbage"){
+  } else if (props.kind === "garbage") {
     return "/getMoreGarbage"
   }
 })
 onMounted(() => {
-  if(props.kind!=="search"){
-    rangItem.value=0
-    const initRang=JSON.stringify([0,(rangItem.value+3)])
-    rangItem.value+=3
+  if (props.kind !== "search") {
+    rangItem.value = 0
+    const initRang = JSON.stringify([0, (rangItem.value + 3)])
+    rangItem.value += 3
     //确认登录后部分笔记
-    getNodes.request(requestUrl.value!,initRang).then((response) => {
-      const res= response as resNodeType
+    getNodes.request(requestUrl.value!, initRang).then((response) => {
+      const res = response as resNodeType
       initLoading.value = false;
-      loading.value=false
+      loading.value = false
       data.value = res;
       list.value = res;
     }, (res) => {
       alert(res.msg)
     })
-  }else{
+  } else {
 
   }
 });
 const onLoadMore = () => {
-  if(!end.value){
+  if (!end.value) {
     loading.value = true;
-    const initRang=JSON.stringify([rangItem.value,(rangItem.value+3)])
-    rangItem.value+=3
-    getMoreNodes.request(requestMoreUrl.value!,initRang).then((response) => {
-      const res=response as resNodeType
-      if(res[0]){
+    const initRang = JSON.stringify([rangItem.value, (rangItem.value + 3)])
+    rangItem.value += 3
+    getMoreNodes.request(requestMoreUrl.value!, initRang).then((response) => {
+      const res = response as resNodeType
+      if (res[0]) {
         const newData = data.value.concat(res as resNodeType);
         loading.value = false;
         data.value = newData;
         list.value = newData;
-      }else{
+      } else {
         loading.value = false
-        end.value=true
+        end.value = true
       }
     })
-  }else {
+  } else {
     return
   }
 
 }
 
 //文字超长隐藏
-const hiddenText=(text:string)=>{
-  if(text.length>14){
-    return text.substring(0,14)+"..."
-  }else {
+const hiddenText = (text: string) => {
+  if (text.length > 14) {
+    return text.substring(0, 14) + "..."
+  } else {
     return text
   }
 }
 
-const routerUrl=(nodeId:number)=>{
-  if(props.kind==="nodeBooks"){
+const routerUrl = (nodeId: number) => {
+  if (props.kind === "nodeBooks") {
     return `/node/currentNode/node/${nodeId}`
-  }else if(props.kind==="collection"){
+  } else if (props.kind === "collection") {
     return `/node/currentNode/collection/${nodeId}`
-  }else if(props.kind==="garbage"){
+  } else if (props.kind === "garbage") {
     return `/node/currentNode/garbage/${nodeId}`
-  }else if(props.kind==="search"){
+  } else if (props.kind === "search") {
     return `/node/currentNode/search/${nodeId}`
   }
 }
 
-const formatTime=(time:string)=>{
+const formatTime = (time: string) => {
   return dayjs(time).format("MM月DD日HH:mm")
 }
 
 
-
-watchEffect(()=>{
-  initLoading.value=true
-  loading.value=true
-  list.value=[]
-  end.value=false
-  if(props.haveContent&&props.kind==="search"){
-    searchNodes.request({value:props.searchValue!}).then((response)=>{
-      const res=response as resNodeType
-      initLoading.value=false
-      loading.value=false
-      list.value=res
-      end.value=true
-
-      //添加节流函数
-    })
+//防抖函数
+let timer = ref<boolean>(false)
+const clock = ref<number>()
+const debounce = (fn:()=>void, delay = 5000) => {
+  if (!timer.value) {
+    window.clearTimeout(clock.value);
+    fn()
+    timer.value = true
+    clock.value = window.setTimeout(() => {
+      timer.value = false
+    }, delay)
+  } else {
+  }
+}
+watchEffect(() => {
+  initLoading.value = true
+  loading.value = true
+  list.value = []
+  end.value = false
+  if (props.haveContent && props.kind === "search") {
+    //添加节流函数
+    const fn =()=>{
+      searchNodes.request({value: props.searchValue!}).then((response) => {
+        const res = response as resNodeType
+        initLoading.value = false
+        loading.value = false
+        list.value = res
+        end.value = true
+      })
+    }
+    debounce(fn,1000)
   }
 })
 </script>
@@ -159,29 +177,33 @@ watchEffect(()=>{
 
 <style scoped lang="scss">
 .wrap {
-  padding:0 20px;
+  padding: 0 20px;
 
   > .listWrap {
     min-height: 350px;
   }
-  .noMore{
+
+  .noMore {
     margin-top: 20px;
 
   }
-  .titleWrapX{
-    .inner{
+
+  .titleWrapX {
+    .inner {
       display: flex;
       justify-content: space-between;
       width: 100%;
     }
-    .line{
+
+    .line {
       margin-top: 0;
-      background-color:rgba(42,42,42,.2);
+      background-color: rgba(42, 42, 42, .2);
     }
   }
 
 }
-#nodeTitle{
+
+#nodeTitle {
   max-width: 8em;
   text-overflow: ellipsis;
   overflow: hidden;
