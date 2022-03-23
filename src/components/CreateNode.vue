@@ -44,8 +44,8 @@ const data=reactive({
   timeAt:dayjs(),
 })
 const initData=()=>{
-  const initValue=JSON.parse(window.localStorage.getItem("__createNode")!)||{title:"", article:"", filename:"", collection:false, timeAt:dayjs()
-  }
+  const localData=window.localStorage.getItem("__createNode")!
+  const initValue=localData&&JSON.parse(localData)||{title:"", article:"", filename:"", collection:false, timeAt:dayjs()}
   data.title=initValue.title
   data.textarea=initValue.content
   data.filename=initValue.filename
@@ -53,6 +53,7 @@ const initData=()=>{
   data.timeAt=initValue.timeAt
 }
 initData()
+
 const postData=()=>{
   return {title:data.title,content:data.textarea,fileName:data.filename,collection:data.collection,timeAt:dayjs()}
 }
