@@ -33,8 +33,8 @@
   </div>
 </template>
 <script lang="ts" setup>
-import {computed, onMounted, ref} from 'vue';
-import {getMoreNodes, getNodes, getUserState} from "@/helper/allRequest";
+import {computed, onMounted, ref, watchEffect} from 'vue';
+import {getMoreNodes, getNodes, getUserState, searchNodes} from "@/helper/allRequest";
 import dayjs from "dayjs";
 const initLoading = ref(true);
 const loading = ref(true);
@@ -42,9 +42,12 @@ const data = ref<resNodeType>([]);
 const list = ref<resNodeType>([]);
 const end=ref<boolean>(false)
 const rangItem=ref<number>(0)
+
 type resNodeType = {title: string, content: string}[]
 interface listType{
-  kind: "nodeBooks"|"collection"|"garbage"|"search"
+  kind: "nodeBooks"|"collection"|"garbage"|"search",
+  haveContent?:boolean,
+  searchValue?:string
 }
 const props = defineProps<listType>()
 const requestUrl=computed(()=>{
@@ -54,8 +57,6 @@ const requestUrl=computed(()=>{
     return "/getCollection"
   }else if(props.kind==="garbage"){
     return "/getGarbage"
-  }else if(props.kind==="search"){
-    return "/searchResult"
   }
 })
 const requestMoreUrl=computed(()=>{
@@ -65,24 +66,26 @@ const requestMoreUrl=computed(()=>{
     return "/getMoreCollection"
   }else if(props.kind==="garbage"){
     return "/getMoreGarbage"
-  }else if(props.kind==="search"){
-    return "/moreSearchResult"
   }
 })
 onMounted(() => {
-  rangItem.value=0
-  const initRang=JSON.stringify([0,(rangItem.value+3)])
-  rangItem.value+=3
-  //确认登录后部分笔记
-  getNodes.request(requestUrl.value!,initRang).then((response) => {
-    const res= response as resNodeType
-    initLoading.value = false;
-    loading.value=false
-    data.value = res;
-    list.value = res;
-  }, (res) => {
-    alert(res.msg)
-  })
+  if(props.kind!=="search"){
+    rangItem.value=0
+    const initRang=JSON.stringify([0,(rangItem.value+3)])
+    rangItem.value+=3
+    //确认登录后部分笔记
+    getNodes.request(requestUrl.value!,initRang).then((response) => {
+      const res= response as resNodeType
+      initLoading.value = false;
+      loading.value=false
+      data.value = res;
+      list.value = res;
+    }, (res) => {
+      alert(res.msg)
+    })
+  }else{
+
+  }
 });
 const onLoadMore = () => {
   if(!end.value){
@@ -107,13 +110,6 @@ const onLoadMore = () => {
 
 }
 
-
-//获取登陆状态
-getUserState.request().then((response) => {
-  const res = response as { land: boolean, message: string }
-  // console.log(res)
-})
-
 //文字超长隐藏
 const hiddenText=(text:string)=>{
   if(text.length>14){
@@ -135,10 +131,29 @@ const routerUrl=(nodeId:number)=>{
   }
 }
 
-
 const formatTime=(time:string)=>{
   return dayjs(time).format("MM月DD日HH:mm")
 }
+
+
+
+watchEffect(()=>{
+  initLoading.value=true
+  loading.value=true
+  list.value=[]
+  end.value=false
+  if(props.haveContent&&props.kind==="search"){
+    searchNodes.request({value:props.searchValue!}).then((response)=>{
+      const res=response as resNodeType
+      initLoading.value=false
+      loading.value=false
+      list.value=res
+      end.value=true
+
+      //添加节流函数
+    })
+  }
+})
 </script>
 
 

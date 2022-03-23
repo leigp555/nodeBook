@@ -189,6 +189,18 @@ export const foreverDeleteRes={
         })
     }
 }
+//查找笔记
+export const searchNodes={
+    request(data:{value:string}){
+        return new Promise((resolve,reject)=>{
+                netRequest("/searchNodes", "GET",data).then((res) => {
+                resolve(res)
+            }, (res) => {
+                reject(res)
+            })
+        })
+    }
+}
 //退出登录
 export const userSignOut={
     request(){

@@ -38,9 +38,17 @@ import Collection from "@/components/Collection.vue";
 import Garbage from "@/components/Garbage.vue";
 import NodeBooks from "@/components/NodeBooks.vue";
 import Search from "@/components/Search.vue";
-import {ref} from "vue";
+import {computed, ref, watchEffect} from "vue";
 import {getNodes} from "@/helper/allRequest";
-const activeKey = ref<string>("1")
+import {useStore} from "vuex";
+const store=useStore()
+const currentKey=computed(()=>{
+  return store.getters.getCurrentKind
+})
+const activeKey = ref<string>(currentKey.value)
+watchEffect(()=>{
+  store.commit("modifyCurrentKind",activeKey.value)
+})
 </script>
 
 <style lang="scss" scoped>

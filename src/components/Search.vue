@@ -12,7 +12,7 @@
     </div>
     <div class="searchResult">
       <div class="content" v-if="haveContent">
-        <List kind="search"/>
+        <List kind="search" :haveContent="haveContent" :searchValue="value"/>
       </div>
       <div class="null" v-if="!haveContent">
         <a-empty description="什么也没有"/>
@@ -23,10 +23,17 @@
 <script lang="ts" setup>
 import {ref} from 'vue';
 import List from "@/helper/List.vue"
+import {searchNodes} from "@/helper/allRequest";
+
+
+
 const value = ref<string>('');
-const haveContent = ref(false)
+const haveContent = ref(true)
 const onSearch = (searchValue: string) => {
-  console.log(searchValue);
+  // searchNodes.request({value:searchValue}).then((res)=>{
+  //   console.log(res)
+  // })
+  haveContent.value=true
 };
 </script>
 <style lang="scss" scoped>

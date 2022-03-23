@@ -18,11 +18,11 @@
       </div>
     </header>
     <div class="action">
-      <div class="button" v-if="route.params.fileName!=='garbage'">
+      <div class="button" v-if="route.params.fileName==='node'||route.params.fileName==='collection'">
         <a-button class="action" @click="collection" type="link"><span style="margin-right:2px" ><heart-outlined :class="{clt:collectionState}"/></span>收藏</a-button>
         <a-button class="action" @click="deleteNode" type="link"><span style="margin-right:2px"><delete-outlined/>删除</span></a-button>
       </div>
-      <div class="button" v-else>
+      <div class="button" v-else-if="route.params.fileName==='garbage'">
         <a-button class="action" @click="reset" type="link"><span style="margin-right:2px" ><redo-outlined /></span>还原</a-button>
         <a-button class="action" @click="foreverDelete" type="link"><span style="margin-right:2px"><delete-outlined/>彻底删除</span></a-button>
       </div>
@@ -132,8 +132,17 @@ const reset=()=>{
   router.back()
 }
 const foreverDelete=()=>{
-  foreverDeleteRes.request({nodeId:nodeId.value!}).then(()=>{})
-  router.back()
+  Modal.confirm({
+    title: '删除将不可复原，确定删除？',
+    cancelText:"取消",
+    okText:'确定',
+    icon: createVNode(ExclamationCircleOutlined),
+    onOk() {
+      foreverDeleteRes.request({nodeId:nodeId.value!}).then(()=>{})
+      router.back()
+    },
+    onCancel() {},
+  })
 }
 
 </script>
