@@ -27,11 +27,18 @@ const textarea = ref<string>(nodeInitString)
 const title = ref<string>('示例');
 //当内容被弹出时重新获取数据库中的数据
 const updateData=()=>{
-  const nodeInfo =JSON.parse(window.localStorage.getItem("__currentNode")!) || {title: "", article: ""}
-  title.value = nodeInfo.title
-  textarea.value = nodeInfo.article
+  let nodeInfo
+  if(!props.createNode){
+    nodeInfo =JSON.parse(window.localStorage.getItem("__currentNode")!) || {title: "", article: ""}
+    title.value = nodeInfo.title
+    textarea.value = nodeInfo.article
+  }else {
+    nodeInfo =JSON.parse(window.localStorage.getItem("__createNode")!) || {title: "", article: ""}
+    title.value = nodeInfo.title
+    textarea.value = nodeInfo.content
+  }
 }
-const props=defineProps<{visible:boolean}>()
+const props=defineProps<{visible:boolean,createNode:boolean}>()
 watchEffect(()=>{
   if(props.visible){
     updateData()

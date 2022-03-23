@@ -29,11 +29,6 @@
         </a-tab-pane>
       </a-tabs>
     </div>
-    <div class="newNode">
-      <svg class="icon" aria-hidden="true">
-        <use xlink:href="#icon-add"></use>
-      </svg>
-    </div>
   </div>
 </template>
 <script lang="ts" setup>
@@ -49,29 +44,6 @@ const activeKey = ref<string>("1")
 </script>
 
 <style lang="scss" scoped>
-.wrap {
-  position: relative;
-  top: 0;
-  left: 0;
-  > .newNode {
-    position: fixed;
-    bottom: 120px;
-    right: 0;
-    display: flex;
-    justify-content: end;
-    align-items: center;
-    padding: 60px;
-
-    > .icon {
-      width: 3em;
-      height: 3em;
-      vertical-align: -0.15em;
-      fill: currentColor;
-      overflow: hidden;
-    }
-  }
-}
-
 .icon {
   width: 2em;
   height: 2em;

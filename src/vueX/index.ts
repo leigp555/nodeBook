@@ -1,4 +1,5 @@
 import {createStore} from 'vuex'
+import dayjs from "dayjs";
 
 interface dataX {
     user: { username: string | number, password: string | number },
@@ -8,7 +9,7 @@ interface dataX {
 export const store = createStore<dataX>({
     state() {
         return {
-            user: {username: '', password: ''}
+            user: {username: '', password: ''},
         }
     },
     getters: {

@@ -1,3 +1,5 @@
+import dayjs, {Dayjs} from "dayjs";
+
 export interface FormState {
     username: string;
     password: string;
@@ -26,4 +28,12 @@ export interface nodeInfoType{
     article:string,
     nodeId:number,
     fileName:string
+}
+
+export interface newNodePostType{
+    title:string,content:string,fileName:string,collection:boolean,timeAt:dayjs.Dayjs
+}
+
+export interface collectionType{
+nodeId:number,currentCollectionState:boolean
 }

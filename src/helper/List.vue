@@ -15,11 +15,8 @@
                       <span id="nodeTitle">{{ item.title }}</span>
                       <span> {{formatTime(item.timeAt)}}</span>
                     </div>
-
                   </div>
-
                 </template>
-
               </a-list-item-meta>
             </a-skeleton>
           </a-list-item>

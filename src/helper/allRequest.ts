@@ -1,6 +1,6 @@
 import {netRequest} from "@/helper/netRequest";
 
-import {loginObj, nodeInfoType, userInfoData} from "@/type/type";
+import {collectionType, loginObj, newNodePostType, nodeInfoType, userInfoData} from "@/type/type";
 import {Router} from "vue-router";
 
 //登录页
@@ -119,6 +119,33 @@ export const modifyNodeRse={
     request(data:nodeInfoType){
         return new Promise((resolve,reject)=>{
             netRequest("/modifyUserNode", "POST",data).then((res) => {
+                resolve(res)
+            }, (res) => {
+                reject(res)
+            })
+        })
+    }
+}
+
+//修改收藏状态
+export const modifyNodeRseCollection={
+    request(data:collectionType){
+        return new Promise((resolve,reject)=>{
+            netRequest("/modifyUserNodeCollection", "POST",data).then((res) => {
+                resolve(res)
+            }, (res) => {
+                reject(res)
+            })
+        })
+    }
+}
+
+//创建新的笔记
+
+export const createNewNode={
+    request(data:newNodePostType){
+        return new Promise((resolve,reject)=>{
+            netRequest("/createNewNode", "POST",data).then((res) => {
                 resolve(res)
             }, (res) => {
                 reject(res)

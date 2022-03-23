@@ -17,17 +17,20 @@
         </a-button>
       </div>
     </header>
+    <div class="action">
+      <div class="button">
+        <a-button class="action" @click="collection" type="link"><span style="margin-right:2px" ><heart-outlined :class="{clt:collectionState}"/></span>收藏</a-button>
+        <a-button class="action" @click="deleteNode" type="link"><span style="margin-right:2px"><delete-outlined/>删除</span></a-button>
+      </div>
+      <div class="iconWrap" @click="preview">
+        <eye-outlined /><span>点击预览</span>
+      </div>
+    </div>
     <main class="main">
       <div class="showUserInput">
         <a-input class="title" :bordered="false" v-model:value="title" placeholder="标题" autofocus @change="modifyNode"/>
         <div class="article">
           <textarea class="input" v-model="textarea" @change="modifyNode"/>
-          <div class="iconWrap" @click="preview">
-            <span>点击预览:</span>
-            <svg class="icon" aria-hidden="true">
-              <use xlink:href="#icon-yulan"></use>
-            </svg>
-          </div>
         </div>
       </div>
     </main>
@@ -39,24 +42,29 @@
 
 <script lang="ts" setup>
 import {useRoute, useRouter} from "vue-router";
-import { ExclamationCircleOutlined } from '@ant-design/icons-vue';
+import { ExclamationCircleOutlined,EyeOutlined } from '@ant-design/icons-vue';
 import { createVNode} from 'vue';
 import { Modal } from 'ant-design-vue';
-import {getCurrentNode, modifyNodeRse} from "@/helper/allRequest";
+import {getCurrentNode, modifyNodeRse, modifyNodeRseCollection} from "@/helper/allRequest";
 import ShowNode from "@/components/ShowNode.vue"
 import {ref} from "vue";
-import {nodeInfoType} from "@/type/type";
+import {collectionType, nodeInfoType} from "@/type/type";
+import {HeartOutlined, DeleteOutlined} from '@ant-design/icons-vue';
+
+
 const router=useRouter()
 const route = useRoute()
 const title = ref<string>('');
 const textarea = ref<string>('')
 const nodeId=ref<number>()
+const collectionState=ref<boolean>(false)
 //网络请求
 getCurrentNode.request("/getCurrentNode", route.params as { nodeId: string, fileName: string }).then((response) => {
-  const res = response as { nodeId: number, title: string, content: string }[]
+  const res = response as { nodeId: number, title: string, content: string,collection:boolean }[]
   title.value = res[0].title
   textarea.value = res[0].content
   nodeId.value=res[0].nodeId
+  collectionState.value=res[0].collection
 })
 const saveInfo = () => {
   const article={title:title.value,article:textarea.value,nodeId:nodeId.value,fileName:route.params.fileName} as nodeInfoType
@@ -89,6 +97,15 @@ const modifyNode=()=>{
 const onClose = () => {
   markDownOutVisible.value = false;
 };
+
+const collection=()=>{
+  collectionState.value=!collectionState
+  const postData={nodeId:nodeId.value,currentCollectionState:collectionState.value} as collectionType
+  modifyNodeRseCollection.request(postData).then(()=>{})
+}
+const deleteNode=()=>{
+
+}
 </script>
 
 
@@ -99,6 +116,28 @@ const onClose = () => {
   overflow-y: auto;
   display: flex;
   flex-direction: column;
+  >.action{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-left: 8px;
+    padding-right: 8px;
+    .clt{
+      color: red;
+    }
+    >.iconWrap{
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #189eff;
+      >.icon {
+        width: 1em; height:1em;
+        vertical-align: -0.15em;
+        fill: currentColor;
+        overflow: hidden;
+      }
+    }
+  }
   > .header {
     padding: 12px 5px 12px 12px;
     background-color: #99CC66;
@@ -173,22 +212,6 @@ const onClose = () => {
           height: 100%;
           width: 100%;
           padding: 15px 10px;
-        }
-        >.iconWrap{
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          position: absolute;
-          top: 5px;
-          gap: 2px;
-          right: 10px;
-          color: blue;
-          >.icon {
-            width: 1.4em; height:1.4em;
-            vertical-align: -0.15em;
-            fill: currentColor;
-            overflow: hidden;
-          }
         }
       }
     }
