@@ -163,6 +163,8 @@ const handleFile = (e: Event) => {
 //退出
 const signOut=()=>{
   userSignOut.request().then(()=>{
+    window.localStorage.setItem("__createNode",'')
+    window.localStorage.setItem("__currentNode",'')
     message.success({
       content: () => '成功退出,正在跳转到登录页。。。',
       duration:1.5,
