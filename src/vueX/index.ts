@@ -3,14 +3,16 @@ import dayjs from "dayjs";
 
 interface dataX {
     user: { username: string | number, password: string | number },
-    currentKind:string
+    currentKind:string,
+    currentSearch:string
 }
 
 export const store = createStore<dataX>({
     state() {
         return {
             user: {username: '', password: ''},
-            currentKind:"1"
+            currentKind:"1",
+            currentSearch:''
         }
     },
     getters: {
@@ -19,6 +21,9 @@ export const store = createStore<dataX>({
         },
         getCurrentKind(state){
             return state.currentKind
+        },
+        getCurrentSearch(state){
+            return state.currentSearch
         }
     },
     mutations: {
@@ -27,6 +32,9 @@ export const store = createStore<dataX>({
         },
         modifyCurrentKind(state, payload) {
             state.currentKind = payload
+        },
+        modifyCurrentSearch(state, payload) {
+            state.currentSearch = payload
         }
     }
 })

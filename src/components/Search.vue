@@ -6,27 +6,34 @@
             v-model:value="value"
             placeholder="input search text"
             enter-button
-            @search="onSearch"
+            @input="onSearch"
         />
       </a-space>
     </div>
     <div class="searchResult">
-      <div class="content" v-if="haveContent">
-        <List kind="search" :haveContent="haveContent" :searchValue="value"/>
+      <div class="content" v-if="visible">
+        <List kind="search" v-model:haveContent="haveContent" :searchValue="value"/>
       </div>
-      <div class="null" v-if="!haveContent">
+      <div class="null" v-if="!visible">
         <a-empty description="什么也没有"/>
       </div>
     </div>
   </div>
 </template>
 <script lang="ts" setup>
-import {ref} from 'vue';
+import {computed, ref} from 'vue';
 import List from "@/helper/List.vue"
-import {searchNodes} from "@/helper/allRequest";
-const value = ref<string>('');
+import {useStore} from "vuex";
+const store=useStore()
+const initValue=computed(()=>{
+  return store.getters.getCurrentSearch
+})
+const value = ref<string>(initValue.value);
 const haveContent = ref(true)
-const onSearch = (searchValue: string) => {
+const visible=ref<boolean>(true)
+const onSearch = () => {
+  store.commit("modifyCurrentSearch",value.value)
+  visible.value=true
   haveContent.value=true
 };
 </script>

@@ -12,7 +12,7 @@
                       <a-divider class="line"/>
                     </div>
                     <div class="inner">
-                      <span id="nodeTitle">{{ item.title }}</span>
+                      <span id="nodeTitle" v-html="item.title"></span>
                       <span> {{ formatTime(item.timeAt) }}</span>
                     </div>
                   </div>
@@ -34,7 +34,7 @@
 </template>
 <script lang="ts" setup>
 import {computed, onMounted, ref, watchEffect} from 'vue';
-import {getMoreNodes, getNodes, getUserState, searchNodes} from "@/helper/allRequest";
+import {getMoreNodes, getNodes, searchNodes} from "@/helper/allRequest";
 import dayjs from "dayjs";
 
 const initLoading = ref(true);
@@ -142,36 +142,40 @@ const formatTime = (time: string) => {
 //防抖函数
 let timer = ref<boolean>(false)
 const clock = ref<number>()
-const debounce = (fn:()=>void, delay = 5000) => {
+const debounce = (fn:()=>void, delay = 2000) => {
   if (!timer.value) {
     window.clearTimeout(clock.value);
     fn()
     timer.value = true
     clock.value = window.setTimeout(() => {
       timer.value = false
+      emit("update:haveContent",false)
     }, delay)
   } else {
   }
 }
+
+const emit=defineEmits(["update:haveContent"])
+const fn =()=>{
+  searchNodes.request({value: props.searchValue!}).then((response) => {
+    initLoading.value = false;
+    loading.value = false
+    end.value=true
+    list.value = response as resNodeType
+  })
+}
 watchEffect(() => {
-  initLoading.value = true
-  loading.value = true
-  list.value = []
-  end.value = false
   if (props.haveContent && props.kind === "search") {
     //添加节流函数
-    const fn =()=>{
-      searchNodes.request({value: props.searchValue!}).then((response) => {
-        const res = response as resNodeType
-        initLoading.value = false
-        loading.value = false
-        list.value = res
-        end.value = true
-      })
-    }
     debounce(fn,1000)
   }
 })
+
+if(props.kind === "search"){
+ initLoading.value=false
+  loading .value=false
+  end.value=true
+}
 </script>
 
 
