@@ -57,7 +57,7 @@ const route = useRoute()
 const title = ref<string>('');
 const textarea = ref<string>('')
 const nodeId=ref<number>()
-const collectionState=ref<boolean>(false)
+const collectionState=ref<boolean>()
 //网络请求
 getCurrentNode.request("/getCurrentNode", route.params as { nodeId: string, fileName: string }).then((response) => {
   const res = response as { nodeId: number, title: string, content: string,collection:boolean }[]
@@ -99,7 +99,7 @@ const onClose = () => {
 };
 
 const collection=()=>{
-  collectionState.value=!collectionState
+  collectionState.value=!collectionState.value
   const postData={nodeId:nodeId.value,currentCollectionState:collectionState.value} as collectionType
   modifyNodeRseCollection.request(postData).then(()=>{})
 }

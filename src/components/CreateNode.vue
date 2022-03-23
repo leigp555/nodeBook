@@ -46,7 +46,7 @@ const initData=()=>{
   const initValue=JSON.parse(window.localStorage.getItem("__createNode")!)||{title:"", article:"", filename:"", collection:false, timeAt:dayjs()
   }
   data.title=initValue.title
-  data.textarea=initValue.article
+  data.textarea=initValue.content
   data.filename=initValue.filename
   data.collection=initValue.collection
   data.timeAt=initValue.timeAt
