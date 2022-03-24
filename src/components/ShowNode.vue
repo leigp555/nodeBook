@@ -21,7 +21,6 @@ import {nodeInitString} from "@/helper/nodeEx";
 //@ts-ignore
 import {markDownPlugins} from "@/helper/markdown-plugin.js";
 import {ref, watchEffect} from "vue";
-import "../helper/markdown.scss"
 import 'highlight.js/styles/monokai.css'
 const textarea = ref<string>(nodeInitString)
 const title = ref<string>('示例');
@@ -49,11 +48,7 @@ watchEffect(()=>{
 
 
 </script>
-
-
 <style lang="scss" scoped>
-@import url("../helper/markdown.scss");
-
 .article-wrapper {
   height: 100%;
   overflow-y: auto;

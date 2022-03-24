@@ -149,7 +149,6 @@ const foreverDelete=()=>{
 
 
 <style lang="scss" scoped>
-@import url("../helper/markdown.scss");
 .article-wrapper {
   height: 100%;
   overflow-y: auto;
