@@ -33,7 +33,7 @@ const updateData=()=>{
     title.value = nodeInfo.title
     textarea.value = nodeInfo.article
   }else {
-    const localStoreDate=window.localStorage.getItem("__currentNode")
+    const localStoreDate=window.localStorage.getItem("__createNode")
     nodeInfo =localStoreDate&&JSON.parse(localStoreDate!) || {title: "", article: ""}
     title.value = nodeInfo.title
     textarea.value = nodeInfo.content
