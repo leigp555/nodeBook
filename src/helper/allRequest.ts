@@ -262,3 +262,15 @@ export const punched={
     }
 }
 
+//翻译单词
+export const searchWord={
+    request(data:{word:string,from:string,to:string}){
+        return new Promise((resolve,reject)=>{
+            netRequest("/searchWord", "POST",data).then((res) => {
+                resolve(res)
+            }, (res) => {
+                reject(res)
+            })
+        })
+    }
+}

@@ -29,11 +29,13 @@ const title = ref<string>('示例');
 const updateData=()=>{
   let nodeInfo
   if(!props.createNode){
-    nodeInfo =JSON.parse(window.localStorage.getItem("__currentNode")!) || {title: "", article: ""}
+    const localStoreDate=window.localStorage.getItem("__currentNode")
+    nodeInfo =localStoreDate&&JSON.parse(localStoreDate!) || {title: "", article: ""}
     title.value = nodeInfo.title
     textarea.value = nodeInfo.article
   }else {
-    nodeInfo =JSON.parse(window.localStorage.getItem("__createNode")!) || {title: "", article: ""}
+    const localStoreDate=window.localStorage.getItem("__currentNode")
+    nodeInfo =localStoreDate&&JSON.parse(localStoreDate!) || {title: "", article: ""}
     title.value = nodeInfo.title
     textarea.value = nodeInfo.content
   }

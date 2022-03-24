@@ -1,0 +1,11 @@
+<template>
+  <Translate/>
+</template>
+
+<script lang="ts" setup>
+import Translate from "@/components/Translate.vue"
+</script>
+
+<style lang="scss" scoped>
+
+</style>
